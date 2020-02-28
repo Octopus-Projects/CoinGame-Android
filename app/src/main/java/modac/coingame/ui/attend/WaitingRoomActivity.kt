@@ -1,4 +1,4 @@
-package modac.coingame
+package modac.coingame.ui.attend
 
 import android.content.Context
 import android.content.Intent
@@ -6,8 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.google.gson.Gson
 import com.spartons.qrcodegeneratorreader.models.UserObject
-import kotlinx.android.synthetic.main.activity_waiting_room.*
-import modac.coingame.qrcode.EncryptionHelper
+import modac.coingame.R
+import modac.coingame.ui.attend.qrcode.EncryptionHelper
 
 class WaitingRoomActivity : AppCompatActivity() {
     companion object {
@@ -25,8 +25,10 @@ class WaitingRoomActivity : AppCompatActivity() {
     private fun init(){
         if (intent.getSerializableExtra(SCANNED_STRING) == null)
             throw RuntimeException("No encrypted String found in intent")
-        val decryptedString = EncryptionHelper.getInstance().getDecryptionString(intent.getStringExtra(SCANNED_STRING))
+        val decryptedString = EncryptionHelper.getInstance().getDecryptionString(intent.getStringExtra(
+            SCANNED_STRING
+        ))
         val userObject = Gson().fromJson(decryptedString, UserObject::class.java)
-        tv_test.text = userObject.room_url
+//        tv_test.text = userObject.room_url
     }
 }

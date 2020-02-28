@@ -1,4 +1,4 @@
-package modac.coingame
+package modac.coingame.ui.attend
 
 import android.Manifest
 import android.content.Context
@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.Window
 import android.view.WindowManager
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -19,6 +18,7 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.Result
 import kotlinx.android.synthetic.main.activity_find_room.*
 import me.dm7.barcodescanner.zxing.ZXingScannerView
+import modac.coingame.R
 
 class FindRoomActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
 
@@ -41,10 +41,14 @@ class FindRoomActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
         flashOnOffImageView.setOnClickListener {
             if (qrCodeScanner.flash) {
                 qrCodeScanner.flash = false
-                flashOnOffImageView.background = ContextCompat.getDrawable(this, R.drawable.flash_off_vector_icon)
+                flashOnOffImageView.background = ContextCompat.getDrawable(this,
+                    R.drawable.flash_off_vector_icon
+                )
             } else {
                 qrCodeScanner.flash = true
-                flashOnOffImageView.background = ContextCompat.getDrawable(this, R.drawable.flash_on_vector_icon)
+                flashOnOffImageView.background = ContextCompat.getDrawable(this,
+                    R.drawable.flash_on_vector_icon
+                )
             }
         }
     }
@@ -62,7 +66,8 @@ class FindRoomActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA),
-                    MY_CAMERA_REQUEST_CODE)
+                    MY_CAMERA_REQUEST_CODE
+                )
                 return
             }
         }
@@ -87,7 +92,9 @@ class FindRoomActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
             val snackbar = Snackbar.make(scanQrCodeRootView, "카메라 권한을 허용해주세요", Snackbar.LENGTH_LONG)
             val view1 = snackbar.view
-            view1.setBackgroundColor(ContextCompat.getColor(this, R.color.colorWhite))
+            view1.setBackgroundColor(ContextCompat.getColor(this,
+                R.color.colorWhite
+            ))
             snackbar.show()
         }
     }
@@ -98,7 +105,12 @@ class FindRoomActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
     }
     override fun handleResult(p0: Result?) {
         if (p0 != null) {
-            startActivity(WaitingRoomActivity.getScannedActivity(this, p0.text))
+            startActivity(
+                WaitingRoomActivity.getScannedActivity(
+                    this,
+                    p0.text
+                )
+            )
             resumeCamera()
         }
     }

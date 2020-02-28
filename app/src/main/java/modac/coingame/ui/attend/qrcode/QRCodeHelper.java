@@ -1,4 +1,4 @@
-package modac.coingame.qrcode;
+package modac.coingame.ui.attend.qrcode;
 
 import android.content.Context;
 import android.graphics.Bitmap;

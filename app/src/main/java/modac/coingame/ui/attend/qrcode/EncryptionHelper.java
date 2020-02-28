@@ -1,13 +1,7 @@
-package modac.coingame.qrcode;
+package modac.coingame.ui.attend.qrcode;
 
 
 import android.util.Base64;
-
-import java.security.MessageDigest;
-import java.util.Arrays;
-
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 
 /**
  * Created by Ahsen Saeed on 1/10/2018.

@@ -1,13 +1,13 @@
-package modac.coingame
+package modac.coingame.ui.ingame
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import modac.coingame.R
 
-class MainActivity : AppCompatActivity() {
+class SelectQuestionActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
+        setContentView(R.layout.activity_select_question)
     }
 }
