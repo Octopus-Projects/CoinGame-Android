@@ -55,4 +55,8 @@ dependencies {
 
     //Awsome EditText
     implementation "ss.anoop:awesome-edittext:1.0.0"
+
+    //커스텀 다이얼로그그
+    implementation 'com.wang.avi:library:2.1.3'
+
 }

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="280dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_white_big_round"
+    android:padding="16dp">
+
+
+    <View
+        android:id="@+id/view4"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_gray_round"
+        app:layout_constraintEnd_toEndOf="@+id/tv_cancle"
+        app:layout_constraintStart_toStartOf="@+id/tv_cancle"
+        app:layout_constraintTop_toTopOf="@+id/tv_cancle" />
+
+    <TextView
+        android:id="@+id/tv_cancle"
+        android:layout_width="120dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="8dp"
+        android:background="@drawable/bg_transparent_round"
+        android:gravity="center"
+        android:lineSpacingExtra="8sp"
+        android:text="취소"
+        android:textColor="#0a0001"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView15" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_green_round"
+        app:layout_constraintEnd_toEndOf="@+id/tv_exit"
+        app:layout_constraintStart_toStartOf="@+id/tv_exit"
+        app:layout_constraintTop_toTopOf="@+id/tv_exit" />
+
+    <TextView
+        android:id="@+id/tv_exit"
+        android:layout_width="120dp"
+        android:layout_height="52dp"
+        android:layout_marginLeft="8dp"
+        android:background="@drawable/bg_transparent_round"
+        android:gravity="center"
+        android:lineSpacingExtra="8sp"
+        android:text="나가기"
+        android:textColor="#0a0001"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_cancle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline4" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="16dp"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="8sp"
+        android:text="정말 나가시겠습니까?"
+        android:textColor="#030303"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+</androidx.constraintlayout.widget.ConstraintLayout>

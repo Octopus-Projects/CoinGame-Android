@@ -32,7 +32,7 @@ class CreateRoomActivity : AppCompatActivity() {
         setListenner()
     }
     private fun setListenner(){
-        tv_start.setOnClickListener { startActivity(Intent(this,SelectQuestionActivity::class.java)) }
+        tv_submit.setOnClickListener { startActivity(Intent(this,SelectQuestionActivity::class.java)) }
     }
     private fun loadAttendees(){
         attendeesDatas.add(

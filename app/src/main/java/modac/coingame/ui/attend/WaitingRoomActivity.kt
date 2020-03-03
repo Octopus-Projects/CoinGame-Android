@@ -4,8 +4,10 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.google.gson.Gson
 import com.spartons.qrcodegeneratorreader.models.UserObject
+import kotlinx.android.synthetic.main.activity_waiting_room.*
 import modac.coingame.R
 import modac.coingame.ui.attend.qrcode.EncryptionHelper
 
@@ -29,6 +31,6 @@ class WaitingRoomActivity : AppCompatActivity() {
             SCANNED_STRING
         ))
         val userObject = Gson().fromJson(decryptedString, UserObject::class.java)
-//        tv_test.text = userObject.room_url
+        tv_test.text = userObject.room_url
     }
 }

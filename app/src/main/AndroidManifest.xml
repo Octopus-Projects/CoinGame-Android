@@ -14,14 +14,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.ingame.SelectQuestionActivity" />
+        <activity android:name=".ui.ingame.ResultActivity"></activity>
+        <activity android:name=".ui.ingame.MixActivity" >
+
+        </activity>
+        <activity android:name=".ui.ingame.AnswerActivity" />
+        <activity android:name=".ui.ingame.SelectQuestionActivity">
+
+        </activity>
         <activity android:name=".ui.attend.WaitingRoomActivity" />
-        <activity android:name=".ui.attend.FindRoomActivity">
-
-        </activity>
-        <activity android:name=".ui.attend.CreateRoomActivity" >
-
-        </activity>
+        <activity android:name=".ui.attend.FindRoomActivity" />
+        <activity android:name=".ui.attend.CreateRoomActivity" />
         <activity android:name=".ui.intro.StartingActivity" />
         <activity android:name=".ui.intro.MainActivity">
             <intent-filter>
