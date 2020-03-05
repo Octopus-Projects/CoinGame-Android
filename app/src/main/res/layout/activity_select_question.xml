@@ -16,16 +16,6 @@
         app:layout_constraintTop_toTopOf="parent"
         android:src="@drawable/btn_question" />
 
-    <ImageView
-        android:id="@+id/img_out"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/btn_out" />
-
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
@@ -83,7 +73,7 @@
             style="@style/sub_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="육성으로 질문을 해주세요!" />
+            android:text="큰소리로 질문을 말해줘!" />
 
         <TextView
             style="@style/btn_text"
@@ -115,7 +105,7 @@
             style="@style/btn_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="랜덤질문" />
+            android:text="랜덤 질문" />
     </LinearLayout>
 
     <LinearLayout
@@ -144,15 +134,16 @@
             android:text="패스하기" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="배너 광고"
-        android:gravity="center"
+    <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        ads:adSize="BANNER"
+        android:layout_marginBottom="16dp"
+        ads:adUnitId="@string/app_banner_test_id"
+        android:id="@+id/adView"
+        android:layout_alignParentBottom="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <ImageView
         android:id="@+id/imageView3"
@@ -190,13 +181,4 @@
         app:layout_constraintStart_toStartOf="@+id/imageView3"
         app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
-    <ImageView
-        android:id="@+id/img_qr_code_explain"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/img_info"
-        app:layout_constraintStart_toEndOf="@+id/img_info"
-        app:layout_constraintTop_toTopOf="@+id/img_info"
-        android:src="@drawable/btn_qr" />
 </androidx.constraintlayout.widget.ConstraintLayout>

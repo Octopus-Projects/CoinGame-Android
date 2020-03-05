@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:background="#fefef2"
     android:layout_height="match_parent"
-    tools:context=".ui.attend.CreateRoomActivity">
+    tools:context=".ui.attend.WaitingRoomActivity">
 
     <androidx.core.widget.NestedScrollView
         android:layout_above="@+id/tv_ad"
@@ -106,7 +106,7 @@
             <FrameLayout
                 android:id="@+id/frameLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="148dp"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/bg_white_round"
                 android:padding="16dp"
@@ -133,10 +133,10 @@
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView6" />
+                app:layout_constraintTop_toBottomOf="@+id/img_question" />
 
             <ImageView
-                android:id="@+id/imageView6"
+                android:id="@+id/img_question"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginStart="16dp"
@@ -146,14 +146,14 @@
                 android:src="@drawable/btn_question" />
 
             <ImageView
-                android:id="@+id/imageView7"
+                android:id="@+id/img_out"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:src="@drawable/btn_setting" />
+                android:src="@drawable/btn_out" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -161,10 +161,13 @@
 
 
 
-    <TextView
+    <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        ads:adSize="BANNER"
+        android:layout_marginBottom="16dp"
+        ads:adUnitId="@string/app_banner_test_id"
+        android:id="@+id/adView"
         android:layout_alignParentBottom="true"
-        android:id="@+id/tv_ad"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="배너광고" />
+        android:layout_height="wrap_content"/>
 </RelativeLayout>

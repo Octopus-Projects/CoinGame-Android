@@ -26,9 +26,9 @@
         android:layout_marginHorizontal="16dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/bg_white_round"
+        android:hint="ex) 홍길동"
         android:gravity="center"
         android:paddingLeft="8dp"
-        android:hint="ex) 홍길동"
         android:inputType="text"
         android:padding="16dp"
         android:textColor="#212121"
@@ -57,7 +57,7 @@
         android:gravity="center"
         android:padding="16dp"
         android:textStyle="bold"
-        android:text="게임 시작하기"
+        android:text="수정 완료"
         android:textColor="#bcbcbc"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -76,5 +76,28 @@
         app:layout_constraintBottom_toTopOf="@+id/et_nickname"
         app:layout_constraintEnd_toEndOf="@+id/et_nickname"
         app:layout_constraintStart_toStartOf="@+id/et_nickname" />
+
+    <ImageView
+        android:id="@+id/img_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/btn_back" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:textSize="18sp"
+        android:textColor="#0a0001"
+        android:lineSpacingExtra="9sp"
+        android:layout_height="wrap_content"
+        android:text="닉네임 수정"
+        app:layout_constraintBottom_toBottomOf="@+id/img_back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/img_back" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,10 +13,13 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.android.gms.ads.AdRequest
 import com.google.android.material.snackbar.Snackbar
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.Result
+import kotlinx.android.synthetic.main.activity_answer.*
 import kotlinx.android.synthetic.main.activity_find_room.*
+import kotlinx.android.synthetic.main.activity_find_room.adView
 import me.dm7.barcodescanner.zxing.ZXingScannerView
 import modac.coingame.R
 
@@ -36,6 +39,7 @@ class FindRoomActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
         init()
     }
     private fun init(){
+        adView.loadAd(AdRequest.Builder().build())
         setScannerProperties()
         barcodeBackImageView.setOnClickListener { onBackPressed() }
         flashOnOffImageView.setOnClickListener {

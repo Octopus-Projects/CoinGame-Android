@@ -6,8 +6,10 @@ import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.content.ContextCompat
+import com.google.android.gms.ads.AdRequest
 import kotlinx.android.synthetic.main.activity_answer.*
 import modac.coingame.R
+import modac.coingame.ui.dialog.InfoDialog
 import modac.coingame.ui.dialog.WaitingDialog
 
 class AnswerActivity : AppCompatActivity() {
@@ -19,13 +21,18 @@ class AnswerActivity : AppCompatActivity() {
         init()
     }
     private fun init(){
+        adView.loadAd(AdRequest.Builder().build())
+        setListener()
         tv_submit.isEnabled = false
+    }
+    private fun setListener(){
         rb_yes_btn.setOnClickListener {
             submitEnable()
         }
         rb_no_btn.setOnClickListener {
             submitEnable()
         }
+        img_info.setOnClickListener { InfoDialog(this).show(supportFragmentManager,"tag") }
         tv_submit.setOnClickListener {
             //TODO 동전 제출 요청
             showDialog()

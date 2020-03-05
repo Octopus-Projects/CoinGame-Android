@@ -129,11 +129,21 @@
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/bg_green_round"
-        app:layout_constraintTop_toTopOf="@+id/tv_submit"
+        app:layout_constraintTop_toTopOf="@+id/tv_continue"
         tools:layout_editor_absoluteX="32dp" />
 
+    <View
+        android:id="@+id/v_submit2"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_yellow_round"
+        app:layout_constraintTop_toTopOf="@+id/tv_invite"
+        tools:layout_editor_absoluteX="16dp" />
+
     <TextView
-        android:id="@+id/tv_submit"
+        android:id="@+id/tv_continue"
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:layout_marginHorizontal="16dp"
@@ -151,15 +161,32 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
     <TextView
-        android:id="@+id/textView13"
+        android:id="@+id/tv_invite"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="광고"
+        android:layout_height="52dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_transparent_round"
         android:gravity="center"
-        android:textColor="#ffffff"
-        android:background="#000000"
+        android:lineSpacingExtra="8sp"
+        android:text="친구 초대하기"
+        android:textColor="#0a0001"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_continue" />
+
+    <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/app_banner_test_id"
+        android:layout_marginBottom="16dp"
+        android:id="@+id/adView"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="163dp" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <ImageView
         android:id="@+id/imageView5"
@@ -170,5 +197,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/img_out"
         app:srcCompat="@drawable/img_man" />
+
+    <ImageView
+        android:id="@+id/img_question"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/btn_question" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

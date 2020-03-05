@@ -1,6 +1,7 @@
 package modac.coingame.ui.attend.data
 
 data class Attendees(
-    val userIndex : Int,
-    val userNick : String
+    val userID : String,
+    val userNickname : String,
+    val King : Boolean
 )

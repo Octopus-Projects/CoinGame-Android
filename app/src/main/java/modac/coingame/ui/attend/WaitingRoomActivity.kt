@@ -10,6 +10,7 @@ import com.spartons.qrcodegeneratorreader.models.UserObject
 import kotlinx.android.synthetic.main.activity_waiting_room.*
 import modac.coingame.R
 import modac.coingame.ui.attend.qrcode.EncryptionHelper
+import modac.coingame.ui.dialog.InfoDialog
 
 class WaitingRoomActivity : AppCompatActivity() {
     companion object {
@@ -25,6 +26,7 @@ class WaitingRoomActivity : AppCompatActivity() {
         init()
     }
     private fun init(){
+        setListener()
         if (intent.getSerializableExtra(SCANNED_STRING) == null)
             throw RuntimeException("No encrypted String found in intent")
         val decryptedString = EncryptionHelper.getInstance().getDecryptionString(intent.getStringExtra(
@@ -32,5 +34,9 @@ class WaitingRoomActivity : AppCompatActivity() {
         ))
         val userObject = Gson().fromJson(decryptedString, UserObject::class.java)
         tv_test.text = userObject.room_url
+    }
+    private fun setListener(){
+        img_out.setOnClickListener { finish() }
+        img_question.setOnClickListener { InfoDialog(this).show(supportFragmentManager,"tag") }
     }
 }

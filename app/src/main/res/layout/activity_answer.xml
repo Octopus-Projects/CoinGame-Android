@@ -17,26 +17,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/img_out"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:src="@drawable/btn_out"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/img_qr_code_explain"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:src="@drawable/btn_qr"
-        app:layout_constraintBottom_toBottomOf="@+id/img_info"
-        app:layout_constraintStart_toEndOf="@+id/img_info"
-        app:layout_constraintTop_toTopOf="@+id/img_info" />
-
     <View
         android:id="@+id/view3"
         android:layout_width="0dp"
@@ -52,7 +32,7 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="58dp"
+        android:layout_marginTop="56dp"
         android:lineSpacingExtra="9sp"
         android:paddingHorizontal="4dp"
         android:text="솔직하게 대답하자^^"
@@ -61,7 +41,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img_out" />
+        app:layout_constraintTop_toBottomOf="@+id/img_info" />
 
     <TextView
         android:id="@+id/textView5"
@@ -147,14 +127,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
 
-    <TextView
-        android:id="@+id/textView13"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="광고"
-        android:gravity="center"
-        android:textColor="#ffffff"
-        android:background="#000000"
+    <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/app_banner_test_id"
+        android:id="@+id/adView"
+        android:layout_alignParentBottom="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="163dp" />
+        android:layout_width="match_parent"
+        android:layout_marginBottom="16dp"
+        android:layout_height="wrap_content"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

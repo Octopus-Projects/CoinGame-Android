@@ -12,9 +12,8 @@ class AttenderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
     val tv_number = itemView.findViewById<TextView>(R.id.tv_number)
     val img_king = itemView.findViewById<ImageView>(R.id.img_king)
     fun bind(attendees : Attendees){
-        tv_userNick.text = attendees.userNick
-        tv_number.text = attendees.userIndex.toString()
-        if(tv_number.text.equals("1")) img_king.visibility = View.VISIBLE
+        tv_userNick.text = attendees.userNickname
+        if(attendees.King) img_king.visibility = View.VISIBLE
         else img_king.visibility = View.GONE
     }
 }

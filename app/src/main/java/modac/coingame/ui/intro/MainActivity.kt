@@ -5,12 +5,28 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.core.content.ContextCompat
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
+import io.socket.client.Socket
+import io.socket.emitter.Emitter
 import kotlinx.android.synthetic.main.activity_main.*
 import modac.coingame.R
+import modac.coingame.data.App
+import modac.coingame.network.SocketApplication
 import modac.coingame.util.sendToast
+import org.json.JSONObject
 
+//main
+//starting
+//- create_room -> 게임시작하기 -> select_question -> 질문OK -> answer
+//-> 동전제출시 대기 다이얼로그 -> mix -> result
+//- find_room -> waiting_room
 class MainActivity : AppCompatActivity() {
+    companion object{
+        lateinit var socket: Socket
+    }
     var isBtnEnable = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,8 +34,14 @@ class MainActivity : AppCompatActivity() {
         init()
     }
     private fun init(){
+        settingSocket()
+        MobileAds.initialize(this){}
         setListener()
         setBtnDisable()
+    }
+    private fun settingSocket(){
+        socket = SocketApplication.get()
+        socket.connect()
     }
     private fun setListener(){
         et_nickname.addTextChangedListener(object : TextWatcher{
@@ -35,6 +57,10 @@ class MainActivity : AppCompatActivity() {
         tv_start_btn.setOnClickListener{
             when(isBtnEnable){
                 (true) -> {
+                    val userNick = et_nickname.text.toString()
+                    App.prefs.user_nick = userNick
+                    socket.emit("userNick",userNick)//TODO 소켓 유저 닉네임 보내기 확인 필요
+                    socket.on("userNick",onMessageReceived)
                     startActivity(Intent(this, StartingActivity::class.java))
                     finish()
                 }
@@ -42,6 +68,16 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+    }
+    private val onMessageReceived = Emitter.Listener {//TODO 소켓 유저 id 받기 확인 필요
+        val receiveMessage = it[0] as JSONObject
+        val r = Runnable {
+            runOnUiThread{
+                Log.d("socket success","받은 데이터 : ${receiveMessage}")
+            }
+        }
+        val thread = Thread(r)
+        thread.start()
     }
     private fun setBtnEnable(){
         isBtnEnable = true
