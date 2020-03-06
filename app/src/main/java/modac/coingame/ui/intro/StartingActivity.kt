@@ -4,17 +4,15 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.google.android.gms.ads.AdRequest
-import kotlinx.android.synthetic.main.activity_select_question.*
-import kotlinx.android.synthetic.main.activity_select_question.img_info
 import kotlinx.android.synthetic.main.activity_starting.*
 import kotlinx.android.synthetic.main.activity_starting.adView
 import modac.coingame.R
 import modac.coingame.ui.attend.CreateRoomActivity
 import modac.coingame.ui.attend.FindRoomActivity
 import modac.coingame.ui.dialog.InfoDialog
+import modac.coingame.ui.intro.MainActivity.Companion.socket
 
 class StartingActivity : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_starting)
@@ -34,5 +32,12 @@ class StartingActivity : AppCompatActivity() {
         img_question.setOnClickListener {
             InfoDialog(this).show(supportFragmentManager,"tag")
         }
+    }
+
+    override fun onDestroy() {
+        socket.off()
+        socket.disconnect()
+        socket.close()
+        super.onDestroy()
     }
 }

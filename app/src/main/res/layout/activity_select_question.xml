@@ -51,7 +51,7 @@
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/bg_light_yellow_round"
-        app:layout_constraintTop_toTopOf="@+id/linearLayout3"
+        app:layout_constraintTop_toTopOf="@+id/ll_question_pass"
         tools:layout_editor_absoluteX="38dp" />
 
     <LinearLayout
@@ -109,7 +109,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout3"
+        android:id="@+id/ll_question_pass"
         android:layout_width="match_parent"
         android:layout_height="84dp"
         android:layout_marginHorizontal="16dp"

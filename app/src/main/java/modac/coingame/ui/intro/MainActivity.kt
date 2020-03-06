@@ -7,7 +7,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import androidx.core.content.ContextCompat
-import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import io.socket.client.Socket
 import io.socket.emitter.Emitter

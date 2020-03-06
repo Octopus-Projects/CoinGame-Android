@@ -20,7 +20,7 @@ class AttenderAdapter(private val context : Context) : RecyclerView.Adapter<Atte
     }
 
     override fun onBindViewHolder(holder: AttenderViewHolder, position: Int) {
-        holder.bind(datas[position])
+        holder.bind(datas[position],position)
     }
 
 }

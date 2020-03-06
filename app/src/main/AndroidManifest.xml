@@ -19,7 +19,6 @@
         <activity android:name=".ui.intro.IntroActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -27,7 +26,6 @@
         <activity android:name=".ui.ingame.MixActivity" />
         <activity android:name=".ui.ingame.AnswerActivity" />
         <activity android:name=".ui.ingame.SelectQuestionActivity" />
-        <activity android:name=".ui.attend.WaitingRoomActivity" />
         <activity android:name=".ui.attend.FindRoomActivity" />
         <activity android:name=".ui.attend.CreateRoomActivity" >
 

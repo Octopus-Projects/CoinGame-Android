@@ -1,26 +1,24 @@
 package modac.coingame.ui.attend
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.ads.AdRequest
 import com.google.gson.Gson
-import com.google.gson.JsonElement
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import com.spartons.qrcodegeneratorreader.models.UserObject
-import io.socket.client.Socket
 import io.socket.emitter.Emitter
 import kotlinx.android.synthetic.main.activity_create_room.*
 import kotlinx.android.synthetic.main.activity_create_room.adView
-import kotlinx.android.synthetic.main.activity_create_room.tv_submit
-import modac.coingame.ui.attend.data.Attendees
 import modac.coingame.ui.attend.recycler.AttenderAdapter
 import modac.coingame.R
 import modac.coingame.data.App
-import modac.coingame.network.SocketApplication
-import modac.coingame.ui.attend.data.InGameData
+import modac.coingame.ui.attend.data.Attendees
+import modac.coingame.ui.attend.data.GameStateData
 import modac.coingame.util.VerticalItemDecorator
 import modac.coingame.ui.attend.qrcode.EncryptionHelper
 import modac.coingame.ui.attend.qrcode.QRCodeHelper
@@ -30,29 +28,56 @@ import modac.coingame.ui.ingame.SelectQuestionActivity
 import modac.coingame.ui.intro.MainActivity.Companion.socket
 import org.json.JSONArray
 import org.json.JSONObject
-import java.util.*
 import kotlin.collections.ArrayList
 
 class CreateRoomActivity : AppCompatActivity() {
 
     val attendeesDatas = ArrayList<Attendees>()
     lateinit var attendeesAdapter : AttenderAdapter
+    companion object {
+        private const val SCANNED_STRING: String = "scanned_string"
+        fun getScannedActivity(callingClassContext: Context, encryptedString: String): Intent {
+            return Intent(callingClassContext, CreateRoomActivity::class.java)
+                .putExtra(SCANNED_STRING, encryptedString)
+                .putExtra("isCreate",false)
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_room)
         init()
     }
     private fun init(){
+        socket.connect()
+        socket.open()
         adView.loadAd(AdRequest.Builder().build())
-        createQRCode()
-        loadAttendees()
+        if(checkRoom()){//create : true, waiting : false
+            createQRCode()
+            setBtnVisible()
+        }else{
+            joinRoom()
+            setBtnGone()
+        }
         setListenner()
+        setRecycler()
     }
 
+    private fun joinRoom(){
+        if (intent.getSerializableExtra(SCANNED_STRING) == null)
+            throw RuntimeException("No encrypted String found in intent")
+        val decryptedString = EncryptionHelper.getInstance().getDecryptionString(intent.getStringExtra(
+            SCANNED_STRING
+        ))
+        val userObject = Gson().fromJson(decryptedString, UserObject::class.java)
+        App.prefs.room_data = userObject.room_url
+        socket.emit("joinRoom",App.prefs.room_data, App.prefs.user_nick)
+        Log.d("socket","소켓 emit 요청 완료~~~~~~~~~~~")
+        createQRCode()
+    }
 
     private fun setListenner(){
-        socket.on("userList",onUserReceived)//TODO 소켓 key값 확인 및 이벤트 처리.(방 유저 리스트 갱신)
-        tv_submit.setOnClickListener {
+        socket.on("userList",onUserReceived)
+        tv_gameStart.setOnClickListener {
             socket.emit("startGame",App.prefs.room_data)
             socket.on("startGame",onGameStartReceived)
             startActivity(Intent(this,SelectQuestionActivity::class.java))
@@ -60,30 +85,76 @@ class CreateRoomActivity : AppCompatActivity() {
         img_out.setOnClickListener { finish() }
         img_question.setOnClickListener { InfoDialog(this).show(supportFragmentManager,"tag") }
     }
-    private fun loadAttendees(){
-        attendeesDatas.add(
-            Attendees("I816IobyaeCjGSOTAAAI", "호주니",true)
-        )
-        attendeesDatas.add(
-            Attendees("I816IobyaeCjGSOTAAAI", "코맵동후니",false)
-        )
-        attendeesDatas.add(
-            Attendees("I816IobyaeCjGSOTAAAI", "수군쩜아요",false)
-        )
-        attendeesDatas.add(
-            Attendees("I816IobyaeCjGSOTAAAI", "시니루",false)
-        )
-        attendeesDatas.add(
-            Attendees("I816IobyaeCjGSOTAAAI", "다예하고싶은거다예",false)
-        )
-        attendeesAdapter =
-            AttenderAdapter(this)
-        attendeesAdapter.datas = attendeesDatas
-        rv_attendees.apply {
-            addItemDecoration(VerticalItemDecorator(24))
-            adapter = attendeesAdapter
-            layoutManager = LinearLayoutManager(this@CreateRoomActivity,LinearLayoutManager.VERTICAL,false)
+
+    private val onUserReceived = Emitter.Listener {
+        attendeesDatas.clear()
+        val receiveMessage = it[0] as JSONArray
+        val r = Runnable {
+            Log.d("socket","받은 데이터 : ${receiveMessage}")
+            for (i in 0 until receiveMessage.length()){
+                val jsonObj = receiveMessage[i]
+                val inGameData = Gson().fromJson(jsonObj.toString(),Attendees::class.java)
+                attendeesDatas.add(inGameData)
+            }
+            runOnUiThread{
+                attendeesAdapter.notifyDataSetChanged()
+            }
         }
+        val thread = Thread(r)
+        thread.start()
+    }
+    private val onGameStartReceived = Emitter.Listener {
+        val receiveMessage = it[0] as JSONObject
+        val r = Runnable {
+            var myData : Attendees? = null
+            val gameStateData = Gson().fromJson(receiveMessage.toString(), GameStateData::class.java)
+            for (i in 0 until gameStateData.userList.size){
+                val attendees = gameStateData.userList[i]
+                if(attendees.userNickname.equals(App.prefs.user_nick)){
+                    myData = attendees
+                    break
+                }
+                //socket으로 게임 시작되었다는 것 받아옴.
+                //자신과 일치하는 데이터 셋 추출 -> 자신이 질문자인지 판별하여 뷰 이동.
+            }
+            runOnUiThread{
+                if(myData!=null){
+                    App.prefs.king = myData.king
+                    when(myData.queryUser){
+                        (true) -> {
+                            val intent = Intent(this,SelectQuestionActivity::class.java)
+                            intent.putExtra("question",gameStateData.question)
+                            startActivity(intent)
+                        }
+                        (false) -> {
+                            val intent = Intent(this,AnswerActivity::class.java)
+                            intent.putExtra("queryUser",false)
+                            startActivity(intent)
+                        }
+                    }
+                }
+            }
+        }
+        val thread = Thread(r)
+        thread.start()
+    }
+    private fun checkRoom() : Boolean{
+        val intent = intent
+        return intent.getBooleanExtra("isCreate",true)
+    }
+    private fun setBtnGone(){
+        tv_gameStart.visibility = View.GONE
+        v_gameStart.visibility = View.GONE
+    }
+    private fun setBtnVisible(){
+        tv_gameStart.visibility =View.VISIBLE
+        v_gameStart.visibility = View.VISIBLE
+    }
+    override fun onDestroy() {
+        socket.emit("leaveRoom",App.prefs.room_data)
+        socket.off()
+        Log.d("socket","방 나갑니다~~~~~~~~~~~")
+        super.onDestroy()
     }
     private fun createQRCode(){
         val randomNum : Double = Math.random()
@@ -104,56 +175,13 @@ class CreateRoomActivity : AppCompatActivity() {
             .qrcOde
         img_qr_code.setImageBitmap(bitmap)
     }
-
-    override fun onDestroy() {
-        socket.emit("leaveRoom",App.prefs.room_data)
-        super.onDestroy()
-    }
-    private val onUserReceived = Emitter.Listener {
-        val receiveMessage = it[0] as JSONArray
-        val r = Runnable {
-            attendeesDatas.clear()
-            for (i in 0 until receiveMessage.length()){
-                val attendees = Gson().fromJson(receiveMessage[i] as JsonElement,Attendees::class.java)
-                attendeesDatas.add(attendees)
-            }
-            runOnUiThread{
-                attendeesAdapter.notifyDataSetChanged()
-                Log.d("socket success","받은 데이터 : ${receiveMessage}")
-            }
+    private fun setRecycler(){
+        attendeesAdapter = AttenderAdapter(this)
+        attendeesAdapter.datas = attendeesDatas
+        rv_attendees.apply {
+            addItemDecoration(VerticalItemDecorator(24))
+            adapter = attendeesAdapter
+            layoutManager = LinearLayoutManager(this@CreateRoomActivity,LinearLayoutManager.VERTICAL,false)
         }
-        val thread = Thread(r)
-        thread.start()
-    }
-    private val onGameStartReceived = Emitter.Listener {
-        val receiveMessage = it[0] as JSONArray
-        val r = Runnable {
-            var myData : InGameData? = null
-            for (i in 0 until receiveMessage.length()){
-                val inGameData = Gson().fromJson(receiveMessage[i] as JsonElement,InGameData::class.java)
-                if(inGameData.userNickname.equals(App.prefs.user_nick)){
-                    myData = inGameData
-                    break
-                }
-                //socket으로 게임 시작되었다는 것 받아옴.
-                //자신과 일치하는 데이터 셋 추출 -> 자신이 질문자인지 판별하여 뷰 이동.
-            }
-            if(myData!=null){
-                when(myData.queryUser){
-                    (true) -> {startActivity(Intent(this,SelectQuestionActivity::class.java))}
-                    (false) -> {
-                        val intent = Intent(this,AnswerActivity::class.java)
-                        intent.putExtra("queryUser",false)
-                        startActivity(intent)
-                    }
-                }
-            }
-            runOnUiThread{
-                attendeesAdapter.notifyDataSetChanged()
-                Log.d("socket success","받은 데이터 : ${receiveMessage}")
-            }
-        }
-        val thread = Thread(r)
-        thread.start()
     }
 }

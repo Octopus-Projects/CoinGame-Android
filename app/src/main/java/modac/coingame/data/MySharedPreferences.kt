@@ -9,6 +9,7 @@ class MySharedPreferences(context: Context) {
     val PREF_NICK = "user_nick"
     val PREF_USER_ID = "user_id"
     val PREF_ROOM = "room_data"
+    val PREF_KING = "room_king"
 
     val prefs: SharedPreferences = context.getSharedPreferences(PREFS_FILENAME,0)
     val editor = prefs.edit()
@@ -29,4 +30,8 @@ class MySharedPreferences(context: Context) {
     var user_id : String?
         get() = prefs.getString(PREF_USER_ID,null)
         set(value) = editor.putString(PREF_USER_ID,value).apply()
+
+    var king : Boolean?
+        get() = prefs.getBoolean(PREF_KING,false)
+        set(value) = editor.putBoolean(PREF_KING,value!!).apply()
 }

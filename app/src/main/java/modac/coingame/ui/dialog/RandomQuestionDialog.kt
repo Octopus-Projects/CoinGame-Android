@@ -3,8 +3,6 @@ package modac.coingame.ui.dialog
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,9 +12,10 @@ import androidx.fragment.app.DialogFragment
 import kotlinx.android.synthetic.main.fragment_dialog_question.*
 import modac.coingame.R
 import modac.coingame.ui.ingame.AnswerActivity
+import modac.coingame.ui.intro.MainActivity.Companion.socket
 
 
-class RandomQuestionDialog(private val activity : Activity) : DialogFragment() {
+class RandomQuestionDialog(private val activity : Activity,private val randomQuery : String?) : DialogFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,7 +27,9 @@ class RandomQuestionDialog(private val activity : Activity) : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         isCancelable = false
+        tv_randomQuery.text = randomQuery
         tv_confirm.setOnClickListener {
+            socket.emit("quertionOK")
             startActivity(Intent(activity.applicationContext,AnswerActivity::class.java))
             activity.finish()
             dismiss()

@@ -110,12 +110,13 @@ class FindRoomActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
     override fun handleResult(p0: Result?) {
         if (p0 != null) {
             startActivity(
-                WaitingRoomActivity.getScannedActivity(
+                CreateRoomActivity.getScannedActivity(
                     this,
                     p0.text
                 )
             )
-            resumeCamera()
+            finish()
+//            resumeCamera()
         }
     }
     private fun resumeCamera() {
