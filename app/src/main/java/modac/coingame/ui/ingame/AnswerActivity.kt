@@ -15,15 +15,28 @@ import modac.coingame.ui.dialog.WaitingDialog
 class AnswerActivity : AppCompatActivity() {
 
     lateinit var waitingDialog: WaitingDialog
+    lateinit var waiteQuestionDialog : WaitingDialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_answer)
         init()
     }
     private fun init(){
+        checkIntent()
         adView.loadAd(AdRequest.Builder().build())
         setListener()
         tv_submit.isEnabled = false
+    }
+    private fun checkIntent(){
+        val intent = intent
+        if(intent.getBooleanExtra("queryUser",true)==false){
+            if(!::waiteQuestionDialog.isInitialized){
+                waiteQuestionDialog = WaitingDialog(this)
+                waiteQuestionDialog.getWindow()!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                waiteQuestionDialog.setCancelable(false)
+            }
+            waiteQuestionDialog.show()
+        }
     }
     private fun setListener(){
         rb_yes_btn.setOnClickListener {
