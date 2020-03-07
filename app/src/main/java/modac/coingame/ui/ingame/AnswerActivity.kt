@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.activity_answer.*
 import kotlinx.android.synthetic.main.dialog_waiting.*
 import modac.coingame.R
 import modac.coingame.ui.dialog.InfoDialog
+import modac.coingame.ui.dialog.QuestionWaitingDialog
 import modac.coingame.ui.dialog.WaitingDialog
 import modac.coingame.ui.dialog.WaitingDialog.Companion.tv_voteNum
 import modac.coingame.ui.intro.MainActivity.Companion.socket
@@ -22,7 +23,7 @@ class AnswerActivity : AppCompatActivity() {
 
 
     lateinit var waitingDialog: WaitingDialog
-    lateinit var waiteQuestionDialog : WaitingDialog
+    lateinit var waiteQuestionDialog : QuestionWaitingDialog
     var isFront : Boolean? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +45,7 @@ class AnswerActivity : AppCompatActivity() {
         val intent = intent
         if(intent.getBooleanExtra("queryUser",true)==false){
             if(!::waiteQuestionDialog.isInitialized){
-                waiteQuestionDialog = WaitingDialog(this)
+                waiteQuestionDialog = QuestionWaitingDialog(this)
                 waiteQuestionDialog.getWindow()!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 waiteQuestionDialog.setCancelable(false)
             }
