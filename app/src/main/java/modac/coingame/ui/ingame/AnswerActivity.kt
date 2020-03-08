@@ -122,7 +122,7 @@ class AnswerActivity : AppCompatActivity() {
         val receiveMessage = it[0] as JSONObject
         val r = Runnable {
             runOnUiThread {
-//                tv_voteNum.text =
+
             }
         }
         val thread = Thread(r)
