@@ -11,6 +11,7 @@ import modac.coingame.ui.attend.CreateRoomActivity
 import modac.coingame.ui.attend.FindRoomActivity
 import modac.coingame.ui.dialog.InfoDialog
 import modac.coingame.ui.intro.MainActivity.Companion.socket
+import java.io.IOException
 
 class StartingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +35,14 @@ class StartingActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+        try{
+            socket.close()
+        }catch (e: IOException){
+            e.printStackTrace()
+        }
+    }
     override fun onDestroy() {
         socket.off()
         socket.disconnect()

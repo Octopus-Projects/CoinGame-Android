@@ -61,6 +61,7 @@ class MainActivity : AppCompatActivity() {
                     socket.emit("userNick",userNick)//TODO 소켓 유저 닉네임 보내기 확인 필요
                     socket.on("userNick",onMessageReceived)
                     startActivity(Intent(this, StartingActivity::class.java))
+                    socket.off("userNick")
                     finish()
                 }
                 (false) -> sendToast("닉네임을 입력하세요")

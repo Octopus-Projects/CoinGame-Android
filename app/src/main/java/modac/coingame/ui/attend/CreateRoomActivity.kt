@@ -17,6 +17,10 @@ import kotlinx.android.synthetic.main.activity_create_room.adView
 import modac.coingame.ui.attend.recycler.AttenderAdapter
 import modac.coingame.R
 import modac.coingame.data.App
+import modac.coingame.network.SOCKET_JOIN_ROOM
+import modac.coingame.network.SOCKET_LEAVE_ROOM
+import modac.coingame.network.SOCKET_START_GAME
+import modac.coingame.network.SOCKET_USERLIST
 import modac.coingame.ui.attend.data.Attendees
 import modac.coingame.ui.attend.data.GameStateData
 import modac.coingame.util.VerticalItemDecorator
@@ -48,13 +52,14 @@ class CreateRoomActivity : AppCompatActivity() {
         init()
     }
     private fun init(){
-        socket.connect()
         socket.open()
         adView.loadAd(AdRequest.Builder().build())
         if(checkRoom()){//create : true, waiting : false
+            Log.d("checkRoom","방을 만든 유저입니다")
             createQRCode()
             setBtnVisible()
         }else{
+            Log.d("checkRoom","방에 참가하는 유저입니다")
             joinRoom()
             setBtnGone()
         }
@@ -65,21 +70,19 @@ class CreateRoomActivity : AppCompatActivity() {
     private fun joinRoom(){
         if (intent.getSerializableExtra(SCANNED_STRING) == null)
             throw RuntimeException("No encrypted String found in intent")
-        val decryptedString = EncryptionHelper.getInstance().getDecryptionString(intent.getStringExtra(
-            SCANNED_STRING
-        ))
+        val decryptedString = EncryptionHelper.getInstance().getDecryptionString(intent.getStringExtra(SCANNED_STRING))
         val userObject = Gson().fromJson(decryptedString, UserObject::class.java)
         App.prefs.room_data = userObject.room_url
-        socket.emit("joinRoom",App.prefs.room_data, App.prefs.user_nick)
+        socket.emit(SOCKET_JOIN_ROOM,App.prefs.room_data, App.prefs.user_nick)
         Log.d("socket","소켓 emit 요청 완료~~~~~~~~~~~")
         createQRCode()
     }
 
     private fun setListenner(){
-        socket.on("userList",onUserReceived)
+        socket.on(SOCKET_USERLIST,onUserReceived)
+        socket.on(SOCKET_START_GAME,onGameStartReceived)
         tv_gameStart.setOnClickListener {
-            socket.emit("startGame",App.prefs.room_data)
-            socket.on("startGame",onGameStartReceived)
+            socket.emit(SOCKET_START_GAME,App.prefs.room_data)
             startActivity(Intent(this,SelectQuestionActivity::class.java))
         }
         img_out.setOnClickListener { finish() }
@@ -151,7 +154,7 @@ class CreateRoomActivity : AppCompatActivity() {
         v_gameStart.visibility = View.VISIBLE
     }
     override fun onDestroy() {
-        socket.emit("leaveRoom",App.prefs.room_data)
+        socket.emit(SOCKET_LEAVE_ROOM,App.prefs.room_data)
         socket.off()
         Log.d("socket","방 나갑니다~~~~~~~~~~~")
         super.onDestroy()
@@ -160,7 +163,7 @@ class CreateRoomActivity : AppCompatActivity() {
         val randomNum : Double = Math.random()
         val randomRoomData = randomNum.toString()
         App.prefs.room_data = randomRoomData
-        socket.emit("joinRoom",randomRoomData, App.prefs.user_nick)
+        socket.emit(SOCKET_JOIN_ROOM,randomRoomData, App.prefs.user_nick)
         val user = UserObject(room_url = randomRoomData)
         val serializeString = Gson().toJson(user)
         val encryptedString = EncryptionHelper.getInstance().encryptionString(serializeString).encryptMsg()

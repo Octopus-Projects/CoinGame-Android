@@ -20,8 +20,6 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 class AnswerActivity : AppCompatActivity() {
-
-
     lateinit var waitingDialog: WaitingDialog
     lateinit var waiteQuestionDialog : QuestionWaitingDialog
     var isFront : Boolean? = null
