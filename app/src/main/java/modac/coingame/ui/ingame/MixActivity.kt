@@ -13,12 +13,10 @@ import androidx.vectordrawable.graphics.drawable.Animatable2Compat
 import com.google.android.gms.ads.AdRequest
 import com.linecorp.apng.ApngDrawable
 import com.linecorp.apng.RepeatAnimationCallback
-import kotlinx.android.synthetic.main.activity_answer.*
-import kotlinx.android.synthetic.main.activity_intro.*
 import kotlinx.android.synthetic.main.activity_mix.*
 import kotlinx.android.synthetic.main.activity_mix.adView
 import modac.coingame.R
-import modac.coingame.ui.intro.MainActivity
+import modac.coingame.ui.intro.MainActivity.Companion.socket
 
 class MixActivity : AppCompatActivity() {
 
@@ -29,6 +27,10 @@ class MixActivity : AppCompatActivity() {
     }
     private fun init(){
         adView.loadAd(AdRequest.Builder().build())
+        startAnims()
+
+    }
+    private fun startAnims(){
         val anims = AnimatorSet()
         val transition1 = ObjectAnimator.ofFloat(img_bowl, View.TRANSLATION_X,0f,-100f)
         val transition2 = ObjectAnimator.ofFloat(img_bowl, View.TRANSLATION_X,-100f,100f)
@@ -64,7 +66,10 @@ class MixActivity : AppCompatActivity() {
         override fun onAnimationStart(drawable: Drawable?) {}
         override fun onAnimationRepeat(drawable: ApngDrawable, nextLoopIndex: Int) {}
         override fun onAnimationEnd(drawable: Drawable?) {
-            startActivity(Intent(this@MixActivity, ResultActivity::class.java))
+            val inetnt1 = Intent(this@MixActivity, ResultActivity::class.java)
+            inetnt1.putExtra("front",intent.getStringExtra("front"))
+            inetnt1.putExtra("back",intent.getStringExtra("back"))
+            startActivity(inetnt1)
             finish()
         }
         override fun unscheduleDrawable(who: Drawable, what: Runnable) {}
@@ -74,4 +79,8 @@ class MixActivity : AppCompatActivity() {
     }
     private abstract class AnimationCallbacks
         : Animatable2Compat.AnimationCallback(), RepeatAnimationCallback
+    override fun onDestroy() {
+        socket.off()
+        super.onDestroy()
+    }
 }

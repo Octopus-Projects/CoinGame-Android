@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.TextView
 import com.wang.avi.AVLoadingIndicatorView
 import io.socket.emitter.Emitter
+import kotlinx.android.synthetic.main.dialog_waiting.*
 import modac.coingame.R
 import modac.coingame.ui.intro.MainActivity.Companion.socket
 import org.json.JSONArray
@@ -24,6 +25,7 @@ class WaitingDialog(context: Context) : Dialog(context) {
         avlProgress = findViewById(R.id.aviWaitingDialog)
         avlProgress.show()
         tv_voteNum = findViewById(R.id.tv_not_vote)
+
     }
 
 }

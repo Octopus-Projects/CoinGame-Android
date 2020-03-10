@@ -72,10 +72,10 @@ class CreateRoomActivity : AppCompatActivity() {
             throw RuntimeException("No encrypted String found in intent")
         val decryptedString = EncryptionHelper.getInstance().getDecryptionString(intent.getStringExtra(SCANNED_STRING))
         val userObject = Gson().fromJson(decryptedString, UserObject::class.java)
-        App.prefs.room_data = userObject.room_url
+        App.prefs.room_data = userObject.room_url//방 데이터.
         socket.emit(SOCKET_JOIN_ROOM,App.prefs.room_data, App.prefs.user_nick)
         Log.d("socket","소켓 emit 요청 완료~~~~~~~~~~~")
-        createQRCode()
+        setQRCodeData()
     }
 
     private fun setListenner(){
@@ -159,12 +159,16 @@ class CreateRoomActivity : AppCompatActivity() {
         Log.d("socket","방 나갑니다~~~~~~~~~~~")
         super.onDestroy()
     }
-    private fun createQRCode(){
+    private fun createQRCode(){//QRCode 데이터 생성.
         val randomNum : Double = Math.random()
         val randomRoomData = randomNum.toString()
         App.prefs.room_data = randomRoomData
         socket.emit(SOCKET_JOIN_ROOM,randomRoomData, App.prefs.user_nick)
-        val user = UserObject(room_url = randomRoomData)
+        setQRCodeData()
+    }
+    private fun setQRCodeData(){
+        val randomRoomComplexData = App.prefs.room_data
+        val user = UserObject(room_url = randomRoomComplexData!!)
         val serializeString = Gson().toJson(user)
         val encryptedString = EncryptionHelper.getInstance().encryptionString(serializeString).encryptMsg()
         setImageBitmap(encryptedString)

@@ -5,12 +5,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.google.android.gms.ads.AdRequest
-import kotlinx.android.synthetic.main.activity_answer.*
 import kotlinx.android.synthetic.main.activity_answer.adView
 import kotlinx.android.synthetic.main.activity_result.*
 import modac.coingame.R
 import modac.coingame.data.App
 import modac.coingame.ui.dialog.InfoDialog
+import modac.coingame.ui.intro.MainActivity.Companion.socket
 
 class ResultActivity : AppCompatActivity() {
 
@@ -25,6 +25,8 @@ class ResultActivity : AppCompatActivity() {
         setView()
     }
     private fun setView(){
+        tv_front_num.text = intent.getStringExtra("front")
+        tv_back_num.text = intent.getStringExtra("back")
         if(App.prefs.king!!){
             tv_invite.visibility = View.VISIBLE
             tv_continue.visibility = View.VISIBLE
@@ -36,10 +38,16 @@ class ResultActivity : AppCompatActivity() {
     private fun setListener(){
         img_question.setOnClickListener { InfoDialog(this).show(supportFragmentManager,"tag") }
         img_out.setOnClickListener { finish() }
-        tv_invite
+        tv_invite.setOnClickListener {
+
+        }
         tv_continue.setOnClickListener {
             startActivity(Intent(this,SelectQuestionActivity::class.java))
             finish()
         }
+    }
+    override fun onDestroy() {
+        socket.off()
+        super.onDestroy()
     }
 }

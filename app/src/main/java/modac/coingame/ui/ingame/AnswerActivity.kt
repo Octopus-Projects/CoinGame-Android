@@ -7,14 +7,16 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.content.ContextCompat
 import com.google.android.gms.ads.AdRequest
+import com.google.gson.Gson
 import io.socket.emitter.Emitter
 import kotlinx.android.synthetic.main.activity_answer.*
-import kotlinx.android.synthetic.main.dialog_waiting.*
 import modac.coingame.R
+import modac.coingame.data.App
+import modac.coingame.network.*
 import modac.coingame.ui.dialog.InfoDialog
 import modac.coingame.ui.dialog.QuestionWaitingDialog
 import modac.coingame.ui.dialog.WaitingDialog
-import modac.coingame.ui.dialog.WaitingDialog.Companion.tv_voteNum
+import modac.coingame.ui.ingame.data.VoteResult
 import modac.coingame.ui.intro.MainActivity.Companion.socket
 import org.json.JSONArray
 import org.json.JSONObject
@@ -36,8 +38,10 @@ class AnswerActivity : AppCompatActivity() {
         setSocket()
     }
     private fun setSocket(){
-        socket.on("questionOK",onQuestionOKReceived)
-        socket.on("voteOK",onVoteOKReceived)
+        socket.on(SOCKET_GAME_STATE,onGameStateReceived)
+        socket.on(SOCKET_QUESTION_OK,onQuestionOKReceived)
+        socket.on(SOCKET_VOTE_OK,onVoteOKReceived)
+        socket.on(SOCKET_VOTE_NUM,onVoteExtraNum)
     }
     private fun checkIntent(){
         val intent = intent
@@ -62,32 +66,47 @@ class AnswerActivity : AppCompatActivity() {
         img_info.setOnClickListener { InfoDialog(this).show(supportFragmentManager,"tag") }
         tv_submit.setOnClickListener {
             if(isFront!=null){
-                socket.emit("vote",isFront)
+                socket.emit(SOCKET_VOTE, App.prefs.room_data,isFront)
                 showDialog()
             }
         }
     }
     private val onQuestionOKReceived = Emitter.Listener {
-        val receiveMessage = it[0] as JSONArray
+        val receiveMessage = it[0] as JSONObject
         val r = Runnable {
             runOnUiThread {
                 if(waiteQuestionDialog.isShowing){
                     waiteQuestionDialog.dismiss()
                 }
-                startActivity(Intent(applicationContext,MixActivity::class.java))
-                finish()
+
+            }
+        }
+        val thread = Thread(r)
+        thread.start()
+    }
+    private val onGameStateReceived = Emitter.Listener {
+        val receiveMessage = it[0] as JSONArray
+        val r = Runnable {
+            runOnUiThread {
+
             }
         }
         val thread = Thread(r)
         thread.start()
     }
     private val onVoteOKReceived = Emitter.Listener {
-        val receiveMessage = it[0] as JSONArray
+        val receiveMessage = it[0] as JSONObject
         val r = Runnable {
             runOnUiThread {
                 if(waitingDialog.isShowing){
                     waitingDialog.dismiss()
                 }
+                val voteResult = Gson().fromJson(receiveMessage.toString(),VoteResult::class.java)
+                val intent = Intent(this,MixActivity::class.java)
+                intent.putExtra("front",voteResult.front)
+                intent.putExtra("back",voteResult.back)
+                startActivity(intent)
+                finish()
             }
         }
         val thread = Thread(r)
@@ -114,16 +133,23 @@ class AnswerActivity : AppCompatActivity() {
             waitingDialog.setCancelable(false)
         }
         waitingDialog.show()
-        socket.on("voteNum",onVoteExtraNum)
+        socket.on(SOCKET_VOTE_NUM,onVoteExtraNum)
     }
     private val onVoteExtraNum = Emitter.Listener {
         val receiveMessage = it[0] as JSONObject
         val r = Runnable {
             runOnUiThread {
-
+                //숫자를 계속 받는다.
+                //투표를 안한 사람도 숫자를 계속 받는다.
+                //받은 숫자가 waitingDialog에 표시된다.
             }
         }
         val thread = Thread(r)
         thread.start()
+    }
+
+    override fun onDestroy() {
+        socket.off()
+        super.onDestroy()
     }
 }
