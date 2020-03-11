@@ -1,5 +1,6 @@
 package modac.coingame.network
 
+
 const val SOCKET_JOIN_ROOM = "joinRoom" //CreateRoom
 const val SOCKET_LEAVE_ROOM = "leaveRoom" // 방 퇴장
 const val SOCKET_USERLIST = "userList" //

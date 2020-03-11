@@ -23,7 +23,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.ingame.ResultActivity" />
-        <activity android:name=".ui.ingame.MixActivity" />
+        <activity android:name=".ui.ingame.MixActivity" >
+
+        </activity>
         <activity android:name=".ui.ingame.AnswerActivity" />
         <activity android:name=".ui.ingame.SelectQuestionActivity" />
         <activity android:name=".ui.attend.FindRoomActivity" />
