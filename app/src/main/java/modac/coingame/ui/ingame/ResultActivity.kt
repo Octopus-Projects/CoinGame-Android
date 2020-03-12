@@ -10,7 +10,6 @@ import kotlinx.android.synthetic.main.activity_result.*
 import modac.coingame.R
 import modac.coingame.data.App
 import modac.coingame.ui.dialog.InfoDialog
-import modac.coingame.ui.intro.MainActivity.Companion.socket
 
 class ResultActivity : AppCompatActivity() {
 
@@ -47,7 +46,6 @@ class ResultActivity : AppCompatActivity() {
         }
     }
     override fun onDestroy() {
-        socket.off()
         super.onDestroy()
     }
 }

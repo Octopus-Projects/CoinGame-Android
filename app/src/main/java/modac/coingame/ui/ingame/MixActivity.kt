@@ -16,7 +16,6 @@ import com.linecorp.apng.RepeatAnimationCallback
 import kotlinx.android.synthetic.main.activity_mix.*
 import kotlinx.android.synthetic.main.activity_mix.adView
 import modac.coingame.R
-import modac.coingame.ui.intro.MainActivity.Companion.socket
 
 class MixActivity : AppCompatActivity() {
 
@@ -79,8 +78,4 @@ class MixActivity : AppCompatActivity() {
     }
     private abstract class AnimationCallbacks
         : Animatable2Compat.AnimationCallback(), RepeatAnimationCallback
-    override fun onDestroy() {
-        socket.off()
-        super.onDestroy()
-    }
 }

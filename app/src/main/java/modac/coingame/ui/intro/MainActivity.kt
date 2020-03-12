@@ -23,9 +23,9 @@ import org.json.JSONObject
 //-> 동전제출시 대기 다이얼로그 -> mix -> result
 //- find_room -> waiting_room
 class MainActivity : AppCompatActivity() {
-    companion object{
-        lateinit var socket: Socket
-    }
+
+    lateinit var socket: Socket
+
     var isBtnEnable = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +40,13 @@ class MainActivity : AppCompatActivity() {
     }
     private fun settingSocket(){
         socket = SocketApplication.get()
+        socket.on(Socket.EVENT_CONNECT,onConnected)
         socket.connect()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        socket.off(Socket.EVENT_CONNECT)
     }
     private fun setListener(){
         et_nickname.addTextChangedListener(object : TextWatcher{
@@ -58,10 +64,7 @@ class MainActivity : AppCompatActivity() {
                 (true) -> {
                     val userNick = et_nickname.text.toString()
                     App.prefs.user_nick = userNick
-                    socket.emit("userNick",userNick)//TODO 소켓 유저 닉네임 보내기 확인 필요
-                    socket.on("userNick",onMessageReceived)
                     startActivity(Intent(this, StartingActivity::class.java))
-                    socket.off("userNick")
                     finish()
                 }
                 (false) -> sendToast("닉네임을 입력하세요")
@@ -69,11 +72,10 @@ class MainActivity : AppCompatActivity() {
 
         }
     }
-    private val onMessageReceived = Emitter.Listener {//TODO 소켓 유저 id 받기 확인 필요
-        val receiveMessage = it[0] as JSONObject
+    private val onConnected = Emitter.Listener {//TODO 소켓 유저 id 받기 확인 필요
         val r = Runnable {
             runOnUiThread{
-                Log.d("socket success","받은 데이터 : ${receiveMessage}")
+                Log.d("socket success","소켓연결 성공했습니다앙")
             }
         }
         val thread = Thread(r)

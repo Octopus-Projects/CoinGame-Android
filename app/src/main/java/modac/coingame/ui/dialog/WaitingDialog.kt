@@ -5,12 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.widget.TextView
 import com.wang.avi.AVLoadingIndicatorView
-import io.socket.emitter.Emitter
-import kotlinx.android.synthetic.main.dialog_waiting.*
 import modac.coingame.R
-import modac.coingame.ui.intro.MainActivity.Companion.socket
-import org.json.JSONArray
-import org.json.JSONObject
 
 class WaitingDialog(context: Context) : Dialog(context) {
 

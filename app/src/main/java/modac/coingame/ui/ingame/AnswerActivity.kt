@@ -8,20 +8,20 @@ import android.os.Bundle
 import androidx.core.content.ContextCompat
 import com.google.android.gms.ads.AdRequest
 import com.google.gson.Gson
+import io.socket.client.Socket
 import io.socket.emitter.Emitter
 import kotlinx.android.synthetic.main.activity_answer.*
 import modac.coingame.R
 import modac.coingame.data.App
-import modac.coingame.network.*
 import modac.coingame.ui.dialog.InfoDialog
 import modac.coingame.ui.dialog.QuestionWaitingDialog
 import modac.coingame.ui.dialog.WaitingDialog
 import modac.coingame.ui.ingame.data.VoteResult
-import modac.coingame.ui.intro.MainActivity.Companion.socket
 import org.json.JSONArray
 import org.json.JSONObject
 
 class AnswerActivity : AppCompatActivity() {
+    lateinit var socket : Socket
     lateinit var waitingDialog: WaitingDialog
     lateinit var waiteQuestionDialog : QuestionWaitingDialog
     var isFront : Boolean? = null
@@ -38,10 +38,10 @@ class AnswerActivity : AppCompatActivity() {
         setSocket()
     }
     private fun setSocket(){
-        socket.on(SOCKET_GAME_STATE,onGameStateReceived)
-        socket.on(SOCKET_QUESTION_OK,onQuestionOKReceived)
-        socket.on(SOCKET_VOTE_OK,onVoteOKReceived)
-        socket.on(SOCKET_VOTE_NUM,onVoteExtraNum)
+        socket.on("gameState",onGameStateReceived)
+        socket.on("questionOK",onQuestionOKReceived)
+        socket.on("voteOK",onVoteOKReceived)
+        socket.on("voteNum",onVoteExtraNum)
     }
     private fun checkIntent(){
         val intent = intent
@@ -66,7 +66,7 @@ class AnswerActivity : AppCompatActivity() {
         img_info.setOnClickListener { InfoDialog(this).show(supportFragmentManager,"tag") }
         tv_submit.setOnClickListener {
             if(isFront!=null){
-                socket.emit(SOCKET_VOTE, App.prefs.room_data,isFront)
+                socket.emit("vote", App.prefs.room_data,isFront)
                 showDialog()
             }
         }
@@ -133,7 +133,7 @@ class AnswerActivity : AppCompatActivity() {
             waitingDialog.setCancelable(false)
         }
         waitingDialog.show()
-        socket.on(SOCKET_VOTE_NUM,onVoteExtraNum)
+        socket.on("voteNum",onVoteExtraNum)
     }
     private val onVoteExtraNum = Emitter.Listener {
         val receiveMessage = it[0] as JSONObject

@@ -9,15 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
+import io.socket.client.Socket
 import kotlinx.android.synthetic.main.fragment_dialog_question.*
 import modac.coingame.R
-import modac.coingame.network.SOCKET_QUESTION_OK
-import modac.coingame.ui.ingame.AnswerActivity
-import modac.coingame.ui.intro.MainActivity.Companion.socket
 
 
 class RandomQuestionDialog(private val activity : Activity,private val randomQuery : String?) : DialogFragment() {
-
+    lateinit var socket : Socket
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -30,7 +28,7 @@ class RandomQuestionDialog(private val activity : Activity,private val randomQue
         isCancelable = false
         tv_randomQuery.text = randomQuery
         tv_confirm.setOnClickListener {
-            socket.emit(SOCKET_QUESTION_OK)
+            socket.emit("SOCKET_QUESTION_OK")
             dismiss()
         }
     }

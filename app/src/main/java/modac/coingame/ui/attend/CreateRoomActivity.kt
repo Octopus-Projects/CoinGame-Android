@@ -11,16 +11,14 @@ import com.google.android.gms.ads.AdRequest
 import com.google.gson.Gson
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import com.spartons.qrcodegeneratorreader.models.UserObject
+import io.socket.client.Socket
 import io.socket.emitter.Emitter
 import kotlinx.android.synthetic.main.activity_create_room.*
 import kotlinx.android.synthetic.main.activity_create_room.adView
 import modac.coingame.ui.attend.recycler.AttenderAdapter
 import modac.coingame.R
 import modac.coingame.data.App
-import modac.coingame.network.SOCKET_JOIN_ROOM
-import modac.coingame.network.SOCKET_LEAVE_ROOM
-import modac.coingame.network.SOCKET_START_GAME
-import modac.coingame.network.SOCKET_USERLIST
+import modac.coingame.network.SocketApplication
 import modac.coingame.ui.attend.data.Attendees
 import modac.coingame.ui.attend.data.GameStateData
 import modac.coingame.util.VerticalItemDecorator
@@ -29,13 +27,12 @@ import modac.coingame.ui.attend.qrcode.QRCodeHelper
 import modac.coingame.ui.dialog.InfoDialog
 import modac.coingame.ui.ingame.AnswerActivity
 import modac.coingame.ui.ingame.SelectQuestionActivity
-import modac.coingame.ui.intro.MainActivity.Companion.socket
 import org.json.JSONArray
 import org.json.JSONObject
 import kotlin.collections.ArrayList
 
 class CreateRoomActivity : AppCompatActivity() {
-
+    lateinit var socket: Socket
     val attendeesDatas = ArrayList<Attendees>()
     lateinit var attendeesAdapter : AttenderAdapter
     companion object {
@@ -49,10 +46,16 @@ class CreateRoomActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_room)
+        settingSocket()
         init()
     }
+    private fun settingSocket(){
+        socket = SocketApplication.get()
+        socket.on("userList",onUserReceived)
+        socket.on("startGame",onGameStartReceived)
+        socket.connect()
+    }
     private fun init(){
-        socket.open()
         adView.loadAd(AdRequest.Builder().build())
         if(checkRoom()){//create : true, waiting : false
             Log.d("checkRoom","방을 만든 유저입니다")
@@ -73,16 +76,17 @@ class CreateRoomActivity : AppCompatActivity() {
         val decryptedString = EncryptionHelper.getInstance().getDecryptionString(intent.getStringExtra(SCANNED_STRING))
         val userObject = Gson().fromJson(decryptedString, UserObject::class.java)
         App.prefs.room_data = userObject.room_url//방 데이터.
-        socket.emit(SOCKET_JOIN_ROOM,App.prefs.room_data, App.prefs.user_nick)
-        Log.d("socket","소켓 emit 요청 완료~~~~~~~~~~~")
+        val roomData = userObject.room_url
+        val userNick = App.prefs.user_nick
+        socket.emit("joinRoom",roomData, userNick)
+        Log.d("socket","소켓 emit 요청 완료~~~~~~~~~~~ 방 이름 : ${userObject.room_url}")
         setQRCodeData()
     }
 
     private fun setListenner(){
-        socket.on(SOCKET_USERLIST,onUserReceived)
-        socket.on(SOCKET_START_GAME,onGameStartReceived)
+
         tv_gameStart.setOnClickListener {
-            socket.emit(SOCKET_START_GAME,App.prefs.room_data)
+            socket.emit("startGame",App.prefs.room_data)
             startActivity(Intent(this,SelectQuestionActivity::class.java))
         }
         img_out.setOnClickListener { finish() }
@@ -90,6 +94,7 @@ class CreateRoomActivity : AppCompatActivity() {
     }
 
     private val onUserReceived = Emitter.Listener {
+        Log.d("socket","유저 리스트를 받았습니다 ")
         attendeesDatas.clear()
         val receiveMessage = it[0] as JSONArray
         val r = Runnable {
@@ -117,8 +122,6 @@ class CreateRoomActivity : AppCompatActivity() {
                     myData = attendees
                     break
                 }
-                //socket으로 게임 시작되었다는 것 받아옴.
-                //자신과 일치하는 데이터 셋 추출 -> 자신이 질문자인지 판별하여 뷰 이동.
             }
             runOnUiThread{
                 if(myData!=null){
@@ -154,16 +157,19 @@ class CreateRoomActivity : AppCompatActivity() {
         v_gameStart.visibility = View.VISIBLE
     }
     override fun onDestroy() {
-        socket.emit(SOCKET_LEAVE_ROOM,App.prefs.room_data)
-        socket.off()
-        Log.d("socket","방 나갑니다~~~~~~~~~~~")
+        socket.emit("leaveRoom",App.prefs.room_data)
+        socket.disconnect()
+        socket.off("userList")
+        socket.off("startGame")
+        Log.d("socket","leaveRoom 쏨")
         super.onDestroy()
     }
     private fun createQRCode(){//QRCode 데이터 생성.
-        val randomNum : Double = Math.random()
+        val randomNum : Long = (Math.random()*99999999).toLong()+1
         val randomRoomData = randomNum.toString()
         App.prefs.room_data = randomRoomData
-        socket.emit(SOCKET_JOIN_ROOM,randomRoomData, App.prefs.user_nick)
+        socket.emit("joinRoom",randomRoomData, App.prefs.user_nick)
+        Log.d("socket","소켓 emit 요청 완료~~~~~~~~~~~ 방 이름 : ${randomRoomData}")
         setQRCodeData()
     }
     private fun setQRCodeData(){

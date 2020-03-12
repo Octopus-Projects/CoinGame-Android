@@ -6,7 +6,7 @@ import io.socket.client.Socket
 import java.net.URISyntaxException
 
 object SocketApplication {
-    private val BASE_URL = "https://dd9d29dd.ngrok.io"
+    private val BASE_URL = "http://coin.ap-northeast-2.elasticbeanstalk.com/"
     private lateinit var socket : Socket
     //URI를 세팅하는 과정은 반드시 예외처리가 필요
     fun get(): Socket {
