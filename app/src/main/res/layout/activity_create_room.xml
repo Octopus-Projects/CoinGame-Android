@@ -64,7 +64,7 @@
                 android:textColor="#0b0b0b"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="@+id/textView2"
-                app:layout_constraintEnd_toStartOf="@+id/textView10"
+                app:layout_constraintEnd_toStartOf="@+id/tv_attendeesNum"
                 app:layout_constraintTop_toTopOf="@+id/textView2" />
 
             <TextView
@@ -76,12 +76,12 @@
                 android:text="명"
                 android:textColor="#0b0b0b"
                 android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView10"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_attendeesNum"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/textView10" />
+                app:layout_constraintTop_toTopOf="@+id/tv_attendeesNum" />
 
             <TextView
-                android:id="@+id/textView10"
+                android:id="@+id/tv_attendeesNum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:lineSpacingExtra="8sp"

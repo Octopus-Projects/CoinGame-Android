@@ -24,8 +24,6 @@ import org.json.JSONObject
 //- find_room -> waiting_room
 class MainActivity : AppCompatActivity() {
 
-    lateinit var socket: Socket
-
     var isBtnEnable = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,20 +31,9 @@ class MainActivity : AppCompatActivity() {
         init()
     }
     private fun init(){
-        settingSocket()
         MobileAds.initialize(this){}
         setListener()
         setBtnDisable()
-    }
-    private fun settingSocket(){
-        socket = SocketApplication.get()
-        socket.on(Socket.EVENT_CONNECT,onConnected)
-        socket.connect()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        socket.off(Socket.EVENT_CONNECT)
     }
     private fun setListener(){
         et_nickname.addTextChangedListener(object : TextWatcher{
@@ -72,15 +59,7 @@ class MainActivity : AppCompatActivity() {
 
         }
     }
-    private val onConnected = Emitter.Listener {//TODO 소켓 유저 id 받기 확인 필요
-        val r = Runnable {
-            runOnUiThread{
-                Log.d("socket success","소켓연결 성공했습니다앙")
-            }
-        }
-        val thread = Thread(r)
-        thread.start()
-    }
+
     private fun setBtnEnable(){
         isBtnEnable = true
         v_start.background = ContextCompat.getDrawable(applicationContext,

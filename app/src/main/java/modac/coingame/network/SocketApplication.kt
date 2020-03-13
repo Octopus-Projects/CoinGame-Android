@@ -5,6 +5,7 @@ import io.socket.client.IO
 import io.socket.client.Socket
 import java.net.URISyntaxException
 
+
 object SocketApplication {
     private val BASE_URL = "http://coin.ap-northeast-2.elasticbeanstalk.com/"
     private lateinit var socket : Socket

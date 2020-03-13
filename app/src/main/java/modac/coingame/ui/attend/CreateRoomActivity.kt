@@ -32,6 +32,7 @@ import org.json.JSONObject
 import kotlin.collections.ArrayList
 
 class CreateRoomActivity : AppCompatActivity() {
+
     lateinit var socket: Socket
     val attendeesDatas = ArrayList<Attendees>()
     lateinit var attendeesAdapter : AttenderAdapter
@@ -53,7 +54,38 @@ class CreateRoomActivity : AppCompatActivity() {
         socket = SocketApplication.get()
         socket.on("userList",onUserReceived)
         socket.on("startGame",onGameStartReceived)
+        socket.on(Socket.EVENT_CONNECT,onConnected)
+        socket.on(Socket.EVENT_DISCONNECT,onDisconnected)
+        socket.on("ping",onPingReceived)
+        socket.io().reconnectionDelay(1)
         socket.connect()
+    }
+    private val onPingReceived = Emitter.Listener {
+        val r = Runnable {
+            runOnUiThread{
+                Log.d("socket Ping","Ping 받았습니다")
+            }
+        }
+        val thread = Thread(r)
+        thread.start()
+    }
+    private val onDisconnected = Emitter.Listener {
+        val r = Runnable {
+            runOnUiThread{
+                Log.d("socket disconnected","소켓 연결 disconnect 되었습니다")
+            }
+        }
+        val thread = Thread(r)
+        thread.start()
+    }
+    private val onConnected = Emitter.Listener {
+        val r = Runnable {
+            runOnUiThread{
+                Log.d("socket success","소켓연결 성공했습니다")
+            }
+        }
+        val thread = Thread(r)
+        thread.start()
     }
     private fun init(){
         adView.loadAd(AdRequest.Builder().build())
@@ -106,6 +138,7 @@ class CreateRoomActivity : AppCompatActivity() {
             }
             runOnUiThread{
                 attendeesAdapter.notifyDataSetChanged()
+                tv_attendeesNum.text = attendeesDatas.size.toString()
             }
         }
         val thread = Thread(r)
@@ -156,13 +189,24 @@ class CreateRoomActivity : AppCompatActivity() {
         tv_gameStart.visibility =View.VISIBLE
         v_gameStart.visibility = View.VISIBLE
     }
-    override fun onDestroy() {
+
+    override fun onStop() {
+        super.onStop()
         socket.emit("leaveRoom",App.prefs.room_data)
+        Log.d("socket","leaveRoom 쏨")
         socket.disconnect()
         socket.off("userList")
+        socket.off("ping")
         socket.off("startGame")
-        Log.d("socket","leaveRoom 쏨")
-        super.onDestroy()
+        socket.off(Socket.EVENT_DISCONNECT)
+        socket.off(Socket.EVENT_CONNECT)
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        settingSocket()
+        socket.emit("joinRoom",App.prefs.room_data, App.prefs.user_nick)
+        Log.d("socket","Restart 되었습니다")
     }
     private fun createQRCode(){//QRCode 데이터 생성.
         val randomNum : Long = (Math.random()*99999999).toLong()+1
@@ -189,7 +233,7 @@ class CreateRoomActivity : AppCompatActivity() {
         img_qr_code.setImageBitmap(bitmap)
     }
     private fun setRecycler(){
-        attendeesAdapter = AttenderAdapter(this)
+        attendeesAdapter = AttenderAdapter(this,tv_gameStart,v_gameStart)
         attendeesAdapter.datas = attendeesDatas
         rv_attendees.apply {
             addItemDecoration(VerticalItemDecorator(24))

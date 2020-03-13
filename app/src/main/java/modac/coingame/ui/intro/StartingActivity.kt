@@ -15,14 +15,12 @@ import modac.coingame.ui.dialog.InfoDialog
 import java.io.IOException
 
 class StartingActivity : AppCompatActivity() {
-    lateinit var socket:Socket
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_starting)
         init()
     }
     private fun init(){
-        socket = SocketApplication.get()
         adView.loadAd(AdRequest.Builder().build())
         tv_findRoom.setOnClickListener {
             startActivity(Intent(this, FindRoomActivity::class.java))
@@ -36,20 +34,5 @@ class StartingActivity : AppCompatActivity() {
         img_question.setOnClickListener {
             InfoDialog(this).show(supportFragmentManager,"tag")
         }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        try{
-            socket.close()
-        }catch (e: IOException){
-            e.printStackTrace()
-        }
-    }
-    override fun onDestroy() {
-        socket.off()
-        socket.disconnect()
-        socket.close()
-        super.onDestroy()
     }
 }
