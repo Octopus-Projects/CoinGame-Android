@@ -66,8 +66,8 @@ class MixActivity : AppCompatActivity() {
         override fun onAnimationRepeat(drawable: ApngDrawable, nextLoopIndex: Int) {}
         override fun onAnimationEnd(drawable: Drawable?) {
             val inetnt1 = Intent(this@MixActivity, ResultActivity::class.java)
-            inetnt1.putExtra("front",intent.getStringExtra("front"))
-            inetnt1.putExtra("back",intent.getStringExtra("back"))
+            inetnt1.putExtra("front",intent.getIntExtra("front",0))
+            inetnt1.putExtra("back",intent.getIntExtra("back",0))
             startActivity(inetnt1)
             finish()
         }
@@ -78,4 +78,7 @@ class MixActivity : AppCompatActivity() {
     }
     private abstract class AnimationCallbacks
         : Animatable2Compat.AnimationCallback(), RepeatAnimationCallback
+
+    override fun onBackPressed() {
+    }
 }

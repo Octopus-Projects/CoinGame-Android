@@ -27,13 +27,14 @@ import modac.coingame.ui.attend.qrcode.QRCodeHelper
 import modac.coingame.ui.dialog.InfoDialog
 import modac.coingame.ui.ingame.AnswerActivity
 import modac.coingame.ui.ingame.SelectQuestionActivity
+import modac.coingame.ui.intro.StartingActivity.Companion.socket
 import org.json.JSONArray
 import org.json.JSONObject
 import kotlin.collections.ArrayList
 
 class CreateRoomActivity : AppCompatActivity() {
 
-    lateinit var socket: Socket
+
     val attendeesDatas = ArrayList<Attendees>()
     lateinit var attendeesAdapter : AttenderAdapter
     companion object {
@@ -47,19 +48,24 @@ class CreateRoomActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_room)
-        settingSocket()
+        socketOn()
         init()
     }
-    private fun settingSocket(){
-        socket = SocketApplication.get()
+
+
+    override fun onResume() {
+        super.onResume()
+        socket.off("userList")
+        socket.off("gameState")
         socket.on("userList",onUserReceived)
-        socket.on("startGame",onGameStartReceived)
-        socket.on(Socket.EVENT_CONNECT,onConnected)
-        socket.on(Socket.EVENT_DISCONNECT,onDisconnected)
-        socket.on("ping",onPingReceived)
-        socket.io().reconnectionDelay(1)
-        socket.connect()
+        socket.on("gameState",onGameStateReceived)
     }
+    private fun socketOn(){
+        socket.on("userList",onUserReceived)
+        socket.on("gameState",onGameStateReceived)
+        socket.on("ping",onPingReceived)
+    }
+
     private val onPingReceived = Emitter.Listener {
         val r = Runnable {
             runOnUiThread{
@@ -69,24 +75,7 @@ class CreateRoomActivity : AppCompatActivity() {
         val thread = Thread(r)
         thread.start()
     }
-    private val onDisconnected = Emitter.Listener {
-        val r = Runnable {
-            runOnUiThread{
-                Log.d("socket disconnected","소켓 연결 disconnect 되었습니다")
-            }
-        }
-        val thread = Thread(r)
-        thread.start()
-    }
-    private val onConnected = Emitter.Listener {
-        val r = Runnable {
-            runOnUiThread{
-                Log.d("socket success","소켓연결 성공했습니다")
-            }
-        }
-        val thread = Thread(r)
-        thread.start()
-    }
+
     private fun init(){
         adView.loadAd(AdRequest.Builder().build())
         if(checkRoom()){//create : true, waiting : false
@@ -116,10 +105,9 @@ class CreateRoomActivity : AppCompatActivity() {
     }
 
     private fun setListenner(){
-
         tv_gameStart.setOnClickListener {
             socket.emit("startGame",App.prefs.room_data)
-            startActivity(Intent(this,SelectQuestionActivity::class.java))
+//            startActivity(Intent(this,SelectQuestionActivity::class.java))
         }
         img_out.setOnClickListener { finish() }
         img_question.setOnClickListener { InfoDialog(this).show(supportFragmentManager,"tag") }
@@ -144,7 +132,7 @@ class CreateRoomActivity : AppCompatActivity() {
         val thread = Thread(r)
         thread.start()
     }
-    private val onGameStartReceived = Emitter.Listener {
+    private val onGameStateReceived = Emitter.Listener {
         val receiveMessage = it[0] as JSONObject
         val r = Runnable {
             var myData : Attendees? = null
@@ -157,6 +145,7 @@ class CreateRoomActivity : AppCompatActivity() {
                 }
             }
             runOnUiThread{
+                Log.d("socket","받아온 랜덤 질문 : ${gameStateData.question}")
                 if(myData!=null){
                     App.prefs.king = myData.king
                     when(myData.queryUser){
@@ -190,24 +179,23 @@ class CreateRoomActivity : AppCompatActivity() {
         v_gameStart.visibility = View.VISIBLE
     }
 
-    override fun onStop() {
-        super.onStop()
-        socket.emit("leaveRoom",App.prefs.room_data)
-        Log.d("socket","leaveRoom 쏨")
-        socket.disconnect()
+    override fun onPause() {
+        super.onPause()
         socket.off("userList")
-        socket.off("ping")
-        socket.off("startGame")
-        socket.off(Socket.EVENT_DISCONNECT)
-        socket.off(Socket.EVENT_CONNECT)
+        socket.off("gameState")
+        Log.d("socket","gameState 껐습니다")
     }
-
-    override fun onRestart() {
-        super.onRestart()
-        settingSocket()
-        socket.emit("joinRoom",App.prefs.room_data, App.prefs.user_nick)
-        Log.d("socket","Restart 되었습니다")
+    override fun onDestroy() {
+        super.onDestroy()
+        socket.emit("leaveRoom", App.prefs.room_data)
+        Log.d("socket","leaveRoom 쏨")
     }
+//    override fun onRestart() {
+//        super.onRestart()
+//        settingSocket()
+//        socket.emit("joinRoom",App.prefs.room_data, App.prefs.user_nick)
+//        Log.d("socket","Restart 되었습니다")
+//    }
     private fun createQRCode(){//QRCode 데이터 생성.
         val randomNum : Long = (Math.random()*99999999).toLong()+1
         val randomRoomData = randomNum.toString()

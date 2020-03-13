@@ -46,44 +46,6 @@
             app:layout_constraintRight_toRightOf="parent"
             tools:layout_editor_absoluteY="86dp" />
 
-        <LinearLayout
-            android:id="@+id/ll_dialogtxt"
-            android:layout_marginTop="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            app:layout_constraintTop_toBottomOf="@+id/txtWaitingDialogInfo"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:lineSpacingExtra="5dp"
-                android:textSize="16sp"
-                android:textColor="#ffffff"
-                android:text="미투표자 " />
-
-            <TextView
-                android:id="@+id/tv_not_vote"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:lineSpacingExtra="5dp"
-                android:textSize="16sp"
-                android:textColor="#ffffff"
-                android:text="3" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:lineSpacingExtra="5dp"
-                android:textSize="16sp"
-                android:textColor="#ffffff"
-                android:text="명" />
-        </LinearLayout>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

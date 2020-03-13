@@ -5,6 +5,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import modac.coingame.R
+import modac.coingame.data.App
 import modac.coingame.ui.attend.data.Attendees
 import org.w3c.dom.Text
 
@@ -17,13 +18,13 @@ class AttenderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         tv_number.text = (position+1).toString()
         if(attendees.king) {
             img_king.visibility = View.VISIBLE
-            tv_gameStart.visibility = View.VISIBLE
-            v_gameStart.visibility = View.VISIBLE
         }
         else {
             img_king.visibility = View.GONE
-            tv_gameStart.visibility = View.GONE
-            v_gameStart.visibility = View.GONE
+        }
+        if(attendees.king&&App.prefs.user_nick.equals(attendees.userNickname)){
+            tv_gameStart.visibility = View.VISIBLE
+            v_gameStart.visibility = View.VISIBLE
         }
     }
 }
