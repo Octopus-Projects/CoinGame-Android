@@ -11,14 +11,12 @@ import com.google.android.gms.ads.AdRequest
 import com.google.gson.Gson
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import com.spartons.qrcodegeneratorreader.models.UserObject
-import io.socket.client.Socket
 import io.socket.emitter.Emitter
 import kotlinx.android.synthetic.main.activity_create_room.*
 import kotlinx.android.synthetic.main.activity_create_room.adView
 import modac.coingame.ui.attend.recycler.AttenderAdapter
 import modac.coingame.R
 import modac.coingame.data.App
-import modac.coingame.network.SocketApplication
 import modac.coingame.ui.attend.data.Attendees
 import modac.coingame.ui.attend.data.GameStateData
 import modac.coingame.util.VerticalItemDecorator
@@ -33,10 +31,7 @@ import org.json.JSONObject
 import kotlin.collections.ArrayList
 
 class CreateRoomActivity : AppCompatActivity() {
-
-
     val attendeesDatas = ArrayList<Attendees>()
-    lateinit var attendeesAdapter : AttenderAdapter
     companion object {
         private const val SCANNED_STRING: String = "scanned_string"
         fun getScannedActivity(callingClassContext: Context, encryptedString: String): Intent {
@@ -44,6 +39,7 @@ class CreateRoomActivity : AppCompatActivity() {
                 .putExtra(SCANNED_STRING, encryptedString)
                 .putExtra("isCreate",false)
         }
+        lateinit var attendeesAdapter : AttenderAdapter
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +51,7 @@ class CreateRoomActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        Log.d("socket","소켓 gameState, userList를 다시 켬.")
         socket.off("userList")
         socket.off("gameState")
         socket.on("userList",onUserReceived)
@@ -66,16 +63,7 @@ class CreateRoomActivity : AppCompatActivity() {
         socket.on("ping",onPingReceived)
     }
 
-    private val onPingReceived = Emitter.Listener {
-        val r = Runnable {
-            runOnUiThread{
-                Log.d("socket Ping","Ping 받았습니다")
-            }
-        }
-        val thread = Thread(r)
-        thread.start()
-    }
-
+    private val onPingReceived = Emitter.Listener {}
     private fun init(){
         adView.loadAd(AdRequest.Builder().build())
         if(checkRoom()){//create : true, waiting : false
@@ -178,15 +166,11 @@ class CreateRoomActivity : AppCompatActivity() {
         tv_gameStart.visibility =View.VISIBLE
         v_gameStart.visibility = View.VISIBLE
     }
-
-    override fun onPause() {
-        super.onPause()
+    override fun onDestroy() {
+        super.onDestroy()
         socket.off("userList")
         socket.off("gameState")
         Log.d("socket","gameState 껐습니다")
-    }
-    override fun onDestroy() {
-        super.onDestroy()
         socket.emit("leaveRoom", App.prefs.room_data)
         Log.d("socket","leaveRoom 쏨")
     }

@@ -3,6 +3,7 @@ package modac.coingame.ui.ingame
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import com.google.android.gms.ads.AdRequest
 import com.google.gson.Gson
@@ -11,9 +12,11 @@ import kotlinx.android.synthetic.main.activity_answer.adView
 import kotlinx.android.synthetic.main.activity_result.*
 import modac.coingame.R
 import modac.coingame.data.App
+import modac.coingame.ui.attend.CreateRoomActivity.Companion.attendeesAdapter
 import modac.coingame.ui.attend.data.Attendees
 import modac.coingame.ui.attend.data.GameStateData
 import modac.coingame.ui.dialog.InfoDialog
+import modac.coingame.ui.intro.StartingActivity
 import modac.coingame.ui.intro.StartingActivity.Companion.socket
 import org.json.JSONObject
 
@@ -26,6 +29,8 @@ class ResultActivity : AppCompatActivity() {
         init()
     }
     private fun socketOn(){
+        socket.off("gameState")
+        socket.off("gameStatus")
         socket.on("gameStatus",onGameStatusRecieved)
         socket.on("gameState",onGameStateReceived)
     }
@@ -38,6 +43,7 @@ class ResultActivity : AppCompatActivity() {
     private val onGameStateReceived = Emitter.Listener {
         val receiveMessage = it[0] as JSONObject
         val r = Runnable {
+            Log.d("socket","ResultActivity에서 GameState를 받아왔습니다")
             var myData : Attendees? = null
             val gameStateData = Gson().fromJson(receiveMessage.toString(), GameStateData::class.java)
             for (i in 0 until gameStateData.userList.size){
@@ -71,6 +77,7 @@ class ResultActivity : AppCompatActivity() {
     private val onGameStatusRecieved = Emitter.Listener {
         val r = Runnable {
             runOnUiThread {
+                Log.d("socket","ResultActivity에서 GameStatus를 받아왔습니다")
                 finish()
             }
         }
@@ -100,11 +107,18 @@ class ResultActivity : AppCompatActivity() {
 
     private fun setListener(){
         img_question.setOnClickListener { InfoDialog(this).show(supportFragmentManager,"tag") }
-        img_out.setOnClickListener { finish() }
+        img_out.setOnClickListener {
+            if(App.prefs.king!!){
+                socket.emit("gameStatus",App.prefs.room_data)
+            }
+            finishAffinity()
+            startActivity(Intent(this,StartingActivity::class.java))
+            finish()
+        }
         tv_invite.setOnClickListener {
             socket.emit("gameStatus",App.prefs.room_data)
         }
-        tv_continue.setOnClickListener {
+        tv_continue.setOnClickListener {//OK
             socket.emit("continueGame",App.prefs.room_data)
         }
     }

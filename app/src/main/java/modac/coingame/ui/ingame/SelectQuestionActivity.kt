@@ -44,9 +44,13 @@ class SelectQuestionActivity : AppCompatActivity() {
         socket.off("questionOK")
         socket.off("gameState")
     }
-    private fun setSocket(){
+    private fun onSocket(){
         socket.on("questionOK",onQuestionOKReceived)
         socket.on("gameState",onGameStateReceived)
+    }
+    private fun setSocket(){
+        offSocket()
+        onSocket()
         Log.d("socket","questionOK 켰습니다")
         Log.d("socket","gameState 켰습니다")
     }
