@@ -95,7 +95,6 @@ class CreateRoomActivity : AppCompatActivity() {
     private fun setListenner(){
         tv_gameStart.setOnClickListener {
             socket.emit("startGame",App.prefs.room_data)
-//            startActivity(Intent(this,SelectQuestionActivity::class.java))
         }
         img_out.setOnClickListener { finish() }
         img_question.setOnClickListener { InfoDialog(this).show(supportFragmentManager,"tag") }
