@@ -51,13 +51,14 @@ class CreateRoomActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        Log.d("socket","소켓 gameState, userList를 다시 켬.")
+        Log.d("socket","CreateRoomActivity에서 소켓 gameState, userList를 다시 켬.")
         socket.off("userList")
         socket.off("gameState")
         socket.on("userList",onUserReceived)
         socket.on("gameState",onGameStateReceived)
     }
     private fun socketOn(){
+        Log.d("socket","CreateRoomActivity에서 소켓 gameState, userList를 켬.")
         socket.on("userList",onUserReceived)
         socket.on("gameState",onGameStateReceived)
         socket.on("ping",onPingReceived)
@@ -67,11 +68,9 @@ class CreateRoomActivity : AppCompatActivity() {
     private fun init(){
         adView.loadAd(AdRequest.Builder().build())
         if(checkRoom()){//create : true, waiting : false
-            Log.d("checkRoom","방을 만든 유저입니다")
             createQRCode()
             setBtnVisible()
         }else{
-            Log.d("checkRoom","방에 참가하는 유저입니다")
             joinRoom()
             setBtnGone()
         }
@@ -131,6 +130,8 @@ class CreateRoomActivity : AppCompatActivity() {
                     break
                 }
             }
+            socket.off("userList")
+            socket.off("gameState")
             runOnUiThread{
                 Log.d("socket","받아온 랜덤 질문 : ${gameStateData.question}")
                 if(myData!=null){

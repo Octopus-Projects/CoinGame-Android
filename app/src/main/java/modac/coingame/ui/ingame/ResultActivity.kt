@@ -29,10 +29,14 @@ class ResultActivity : AppCompatActivity() {
         init()
     }
     private fun socketOn(){
-        socket.off("gameState")
-        socket.off("gameStatus")
+        socketOff()
         socket.on("gameStatus",onGameStatusRecieved)
         socket.on("gameState",onGameStateReceived)
+        Log.d("socket","ResultActivity에서 소켓 켰습니다")
+    }
+    private fun socketOff(){
+        socket.off("gameState")
+        socket.off("gameStatus")
     }
 
     private val onGameStateReceived = Emitter.Listener {
@@ -56,11 +60,15 @@ class ResultActivity : AppCompatActivity() {
                             val intent = Intent(this,SelectQuestionActivity::class.java)
                             intent.putExtra("question",gameStateData.question)
                             startActivity(intent)
+                            socketOff()
+                            finish()
                         }
                         (false) -> {
                             val intent = Intent(this,AnswerActivity::class.java)
                             intent.putExtra("queryUser",false)
                             startActivity(intent)
+                            socketOff()
+                            finish()
                         }
                     }
                 }
@@ -72,9 +80,8 @@ class ResultActivity : AppCompatActivity() {
     private val onGameStatusRecieved = Emitter.Listener {
         val r = Runnable {
             runOnUiThread {
-                Log.d("socket","ResultActivity에서 GameStatus를 받아왔습니다")
-                socket.off("gameState")
-                socket.off("gameStatus")
+                Log.d("socket","ResultActivity에서 GameStatus를 받아왔고 소켓 껐습니다")
+                socketOff()
                 finish()
             }
         }
@@ -109,9 +116,9 @@ class ResultActivity : AppCompatActivity() {
                 val roomId = App.prefs.room_data
                 socket.emit("gameStatus",roomId)
             }
+            socketOff()
             finishAffinity()
             startActivity(Intent(this,StartingActivity::class.java))
-            finish()
         }
         tv_invite.setOnClickListener {
             val roomId = App.prefs.room_data

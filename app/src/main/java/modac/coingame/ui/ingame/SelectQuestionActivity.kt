@@ -43,16 +43,16 @@ class SelectQuestionActivity : AppCompatActivity() {
     private fun offSocket(){
         socket.off("questionOK")
         socket.off("gameState")
+        Log.d("socket","SelectQuestionActivity에서 소켓 껐습니다")
     }
     private fun onSocket(){
         socket.on("questionOK",onQuestionOKReceived)
         socket.on("gameState",onGameStateReceived)
+        Log.d("socket","SelectQuestionActivity에서 소켓 켰습니다")
     }
     private fun setSocket(){
         offSocket()
         onSocket()
-        Log.d("socket","questionOK 켰습니다")
-        Log.d("socket","gameState 켰습니다")
     }
     private fun setListener(){
         ll_question_complete.setOnClickListener{
@@ -81,7 +81,7 @@ class SelectQuestionActivity : AppCompatActivity() {
         thread.start()
     }
     private val onGameStateReceived = Emitter.Listener {
-        Log.d("socket","GameState 받았습니다")
+        Log.d("socket","SelectQuestionActivity에서 GameState 받았습니다")
         val receiveMessage = it[0] as JSONObject
         val r = Runnable {
             var myData : Attendees? = null
