@@ -15,8 +15,8 @@
         android:gravity="center_horizontal"
         android:lineSpacingExtra="8sp"
         android:text="함께 게임할 사람에게\nQR코드를 보여주세요."
-        android:textColor="#030303"
-        android:textSize="16sp"
+        style="@style/black_16_text"
+        android:textFontWeight="700"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/img_close" />

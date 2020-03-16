@@ -22,6 +22,7 @@ import modac.coingame.ui.dialog.WaitingDialog
 import modac.coingame.ui.dialog.WaitingDialog.Companion.tv_voteNum
 import modac.coingame.ui.ingame.data.VoteResult
 import modac.coingame.ui.intro.StartingActivity.Companion.socket
+import modac.coingame.util.sendToast
 import org.json.JSONObject
 
 class AnswerActivity : AppCompatActivity() {
@@ -96,6 +97,7 @@ class AnswerActivity : AppCompatActivity() {
                 if(waiteQuestionDialog.isShowing){
                     waiteQuestionDialog.dismiss()
                 }
+//                sendToast("")
             }
         }
         val thread = Thread(r)

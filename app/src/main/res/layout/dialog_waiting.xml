@@ -35,10 +35,9 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:lineSpacingExtra="5dp"
-            android:textSize="20sp"
             android:text="잠시만 기다려줘!"
-            android:textStyle="bold"
-            android:textColor="#ffffff"
+            style="@style/white_20_text"
+            android:textFontWeight="550"
             app:layout_constraintTop_toBottomOf="@+id/aviWaitingDialog"
             app:layout_constraintBottom_toTopOf="@+id/ll_dialogtxt"
             app:layout_constraintHorizontal_bias="0.0"
@@ -61,8 +60,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:lineSpacingExtra="5dp"
-                android:textSize="16sp"
-                android:textColor="#ffffff"
+                style="@style/white_16_text"
+                android:textFontWeight="550"
                 android:text="미투표자 " />
 
             <TextView
@@ -71,16 +70,16 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:lineSpacingExtra="5dp"
-                android:textSize="16sp"
-                android:textColor="#ffffff"
+                style="@style/white_16_text"
+                android:textFontWeight="900"
                 android:text="3" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:lineSpacingExtra="5dp"
-                android:textSize="16sp"
-                android:textColor="#ffffff"
+                style="@style/white_16_text"
+                android:textFontWeight="550"
                 android:text="명" />
         </LinearLayout>
 

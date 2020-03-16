@@ -70,13 +70,15 @@
         app:layout_constraintTop_toBottomOf="@+id/textView3">
 
         <TextView
-            style="@style/sub_text"
+            style="@style/black_16_text"
+            android:textFontWeight="700"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="큰소리로 질문을 말해줘!" />
 
         <TextView
-            style="@style/btn_text"
+            style="@style/black_16_text"
+            android:textFontWeight="900"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="질문했어요!" />
@@ -96,13 +98,15 @@
         app:layout_constraintTop_toBottomOf="@+id/ll_question_complete">
 
         <TextView
-            style="@style/sub_text"
+            style="@style/black_16_text"
+            android:textFontWeight="700"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="무슨 질문을 할지 모르겠다면?" />
 
         <TextView
-            style="@style/btn_text"
+            style="@style/black_16_text"
+            android:textFontWeight="900"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="랜덤 질문" />
@@ -122,13 +126,15 @@
         app:layout_constraintTop_toBottomOf="@+id/ll_random_question">
 
         <TextView
-            style="@style/sub_text"
+            style="@style/black_16_text"
+            android:textFontWeight="700"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="난 다음에..." />
 
         <TextView
-            style="@style/btn_text"
+            style="@style/black_16_text"
+            android:textFontWeight="900"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="패스하기" />
@@ -174,9 +180,8 @@
         android:lineSpacingExtra="9sp"
         android:paddingHorizontal="4dp"
         android:text="나의 질문 타임이 되었군!!"
-        android:textColor="#030303"
-        android:textSize="18sp"
-        android:textStyle="bold"
+        style="@style/black_18_text"
+        android:textFontWeight="900"
         app:layout_constraintEnd_toEndOf="@+id/imageView3"
         app:layout_constraintStart_toStartOf="@+id/imageView3"
         app:layout_constraintTop_toBottomOf="@+id/imageView3" />

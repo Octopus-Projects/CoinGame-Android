@@ -34,9 +34,8 @@
         android:lineSpacingExtra="9sp"
         android:paddingHorizontal="4dp"
         android:text="결과가 나왔습니다!"
-        android:textColor="#030303"
-        android:textSize="18sp"
-        android:textStyle="bold"
+        style="@style/black_18_text"
+        android:textFontWeight="900"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,9 +62,8 @@
                 android:gravity="center"
                 android:lineSpacingExtra="8sp"
                 android:text="YES"
-                android:textColor="#0a0001"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                style="@style/black_16_text"
+                android:textFontWeight="900" />
 
             <ImageView
                 android:id="@+id/img_yes"
@@ -85,18 +83,16 @@
                     android:gravity="center"
                     android:lineSpacingExtra="8sp"
                     android:text="5"
-                    android:textColor="#0a0001"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    style="@style/black_16_text"
+                    android:textFontWeight="900"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:lineSpacingExtra="8sp"
                     android:text="개"
-                    android:textColor="#0a0001"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    style="@style/black_16_text"
+                    android:textFontWeight="900" />
             </LinearLayout>
         </LinearLayout>
 
@@ -111,9 +107,8 @@
                 android:gravity="center"
                 android:lineSpacingExtra="8sp"
                 android:text="NO"
-                android:textColor="#0a0001"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                style="@style/black_16_text"
+                android:textFontWeight="900" />
 
             <ImageView
                 android:id="@+id/img_no"
@@ -134,18 +129,16 @@
                     android:gravity="center"
                     android:lineSpacingExtra="8sp"
                     android:text="5"
-                    android:textColor="#0a0001"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    style="@style/black_16_text"
+                    android:textFontWeight="900" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:lineSpacingExtra="8sp"
                     android:text="개"
-                    android:textColor="#0a0001"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    style="@style/black_16_text"
+                    android:textFontWeight="900"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -156,7 +149,7 @@
     <View
         android:id="@+id/v_submit"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="56dp"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/bg_green_round"
@@ -166,7 +159,7 @@
     <View
         android:id="@+id/v_submit2"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="56dp"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/bg_yellow_round"
@@ -176,16 +169,15 @@
     <TextView
         android:id="@+id/tv_continue"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="56dp"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="40dp"
         android:background="@drawable/bg_transparent_round"
         android:gravity="center"
         android:lineSpacingExtra="8sp"
         android:text="게임 계속 진행하기"
-        android:textColor="#0a0001"
-        android:textSize="16sp"
-        android:textStyle="bold"
+        style="@style/black_16_text"
+        android:textFontWeight="900"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -194,16 +186,15 @@
     <TextView
         android:id="@+id/tv_invite"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="56dp"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/bg_transparent_round"
         android:gravity="center"
         android:lineSpacingExtra="8sp"
         android:text="친구 초대하기"
-        android:textColor="#0a0001"
-        android:textSize="16sp"
-        android:textStyle="bold"
+        style="@style/black_16_text"
+        android:textFontWeight="900"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"

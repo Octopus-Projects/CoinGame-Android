@@ -35,11 +35,6 @@ class ResultActivity : AppCompatActivity() {
         socket.on("gameState",onGameStateReceived)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        socket.off("gameState")
-        socket.off("gameStatus")
-    }
     private val onGameStateReceived = Emitter.Listener {
         val receiveMessage = it[0] as JSONObject
         val r = Runnable {
@@ -78,6 +73,8 @@ class ResultActivity : AppCompatActivity() {
         val r = Runnable {
             runOnUiThread {
                 Log.d("socket","ResultActivity에서 GameStatus를 받아왔습니다")
+                socket.off("gameState")
+                socket.off("gameStatus")
                 finish()
             }
         }
@@ -108,18 +105,21 @@ class ResultActivity : AppCompatActivity() {
     private fun setListener(){
         img_question.setOnClickListener { InfoDialog(this).show(supportFragmentManager,"tag") }
         img_out.setOnClickListener {
-            if(App.prefs.king!!){
-                socket.emit("gameStatus",App.prefs.room_data)
+            if(App.prefs.king!!){//방장이 나간 경우
+                val roomId = App.prefs.room_data
+                socket.emit("gameStatus",roomId)
             }
             finishAffinity()
             startActivity(Intent(this,StartingActivity::class.java))
             finish()
         }
         tv_invite.setOnClickListener {
-            socket.emit("gameStatus",App.prefs.room_data)
+            val roomId = App.prefs.room_data
+            socket.emit("gameStatus",roomId)
         }
         tv_continue.setOnClickListener {//OK
-            socket.emit("continueGame",App.prefs.room_data)
+            val roomId = App.prefs.room_data
+            socket.emit("continueGame",roomId)
         }
     }
 

@@ -48,9 +48,8 @@
             android:lineSpacingExtra="9sp"
             android:paddingHorizontal="4dp"
             android:text="두근두근-!"
-            android:textColor="#030303"
-            android:textSize="18sp"
-            android:textStyle="bold"
+            style="@style/black_18_text"
+            android:textFontWeight="900"
             app:layout_constraintEnd_toEndOf="@+id/img_bowl"
             app:layout_constraintStart_toStartOf="@+id/img_bowl"
             app:layout_constraintTop_toBottomOf="@+id/img_bowl" />
@@ -63,8 +62,8 @@
             android:gravity="center"
             android:lineSpacingExtra="8sp"
             android:text="YES가\n몇개가 나오려나!"
-            android:textColor="#030303"
-            android:textSize="16sp"
+            style="@style/black_16_text"
+            android:textFontWeight="700"
             app:layout_constraintEnd_toEndOf="@+id/textView3"
             app:layout_constraintStart_toStartOf="@+id/textView3"
             app:layout_constraintTop_toBottomOf="@+id/view3" />
