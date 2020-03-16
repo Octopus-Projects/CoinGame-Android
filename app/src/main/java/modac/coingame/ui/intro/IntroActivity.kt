@@ -3,8 +3,10 @@ package modac.coingame.ui.intro
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.drawable.Drawable
-import androidx.appcompat.app.AppCompatActivity
+import android.os.Build
 import android.os.Bundle
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.initialization.InitializationStatus
@@ -13,6 +15,7 @@ import com.linecorp.apng.ApngDrawable
 import com.linecorp.apng.RepeatAnimationCallback
 import kotlinx.android.synthetic.main.activity_intro.*
 import modac.coingame.R
+
 
 class IntroActivity : AppCompatActivity() {
 

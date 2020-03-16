@@ -19,6 +19,7 @@ class ChangeNickActivity : AppCompatActivity() {
         init()
     }
     private fun init(){
+        et_nickname.setText(App.prefs.user_nick)
         setListener()
     }
     private fun setListener(){
