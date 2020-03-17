@@ -9,15 +9,21 @@ import com.google.android.gms.ads.AdRequest
 import com.google.gson.Gson
 import io.socket.emitter.Emitter
 import kotlinx.android.synthetic.main.activity_answer.adView
+import kotlinx.android.synthetic.main.activity_create_room.*
 import kotlinx.android.synthetic.main.activity_result.*
+import kotlinx.android.synthetic.main.activity_result.img_out
+import kotlinx.android.synthetic.main.activity_result.img_question
 import modac.coingame.R
 import modac.coingame.data.App
 import modac.coingame.ui.attend.CreateRoomActivity.Companion.attendeesAdapter
+import modac.coingame.ui.attend.CreateRoomActivity.Companion.attendeesDatas
 import modac.coingame.ui.attend.data.Attendees
 import modac.coingame.ui.attend.data.GameStateData
 import modac.coingame.ui.dialog.InfoDialog
 import modac.coingame.ui.intro.StartingActivity
 import modac.coingame.ui.intro.StartingActivity.Companion.socket
+import modac.coingame.util.sendToast
+import org.json.JSONArray
 import org.json.JSONObject
 
 class ResultActivity : AppCompatActivity() {
@@ -32,13 +38,32 @@ class ResultActivity : AppCompatActivity() {
         socketOff()
         socket.on("gameStatus",onGameStatusRecieved)
         socket.on("gameState",onGameStateReceived)
+        socket.on("userList",onUserReceived)
         Log.d("socket","ResultActivity에서 소켓 켰습니다")
     }
     private fun socketOff(){
         socket.off("gameState")
         socket.off("gameStatus")
+        socket.off("userList")
     }
-
+    private val onUserReceived = Emitter.Listener {
+        Log.d("socket","유저 리스트를 받았습니다 ")
+        attendeesDatas.clear()
+        val receiveMessage = it[0] as JSONArray
+        val r = Runnable {
+            Log.d("socket","받은 데이터 : ${receiveMessage}")
+            for (i in 0 until receiveMessage.length()){
+                val jsonObj = receiveMessage[i]
+                val inGameData = Gson().fromJson(jsonObj.toString(),Attendees::class.java)
+                attendeesDatas.add(inGameData)
+            }
+            runOnUiThread{
+                sendToast("친구 한명이 나갔어!")
+            }
+        }
+        val thread = Thread(r)
+        thread.start()
+    }
     private val onGameStateReceived = Emitter.Listener {
         val receiveMessage = it[0] as JSONObject
         val r = Runnable {
@@ -112,13 +137,15 @@ class ResultActivity : AppCompatActivity() {
     private fun setListener(){
         img_question.setOnClickListener { InfoDialog(this).show(supportFragmentManager,"tag") }
         img_out.setOnClickListener {
+            val roomId = App.prefs.room_data
             if(App.prefs.king!!){//방장이 나간 경우
-                val roomId = App.prefs.room_data
                 socket.emit("gameStatus",roomId)
             }
             socketOff()
+            socket.emit("leaveRoom",roomId)
             finishAffinity()
             startActivity(Intent(this,StartingActivity::class.java))
+            finish()
         }
         tv_invite.setOnClickListener {
             val roomId = App.prefs.room_data

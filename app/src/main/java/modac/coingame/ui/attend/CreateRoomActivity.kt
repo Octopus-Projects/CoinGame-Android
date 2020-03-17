@@ -31,7 +31,7 @@ import org.json.JSONObject
 import kotlin.collections.ArrayList
 
 class CreateRoomActivity : AppCompatActivity() {
-    val attendeesDatas = ArrayList<Attendees>()
+
     companion object {
         private const val SCANNED_STRING: String = "scanned_string"
         fun getScannedActivity(callingClassContext: Context, encryptedString: String): Intent {
@@ -40,6 +40,7 @@ class CreateRoomActivity : AppCompatActivity() {
                 .putExtra("isCreate",false)
         }
         lateinit var attendeesAdapter : AttenderAdapter
+        val attendeesDatas = ArrayList<Attendees>()
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,13 +49,20 @@ class CreateRoomActivity : AppCompatActivity() {
         init()
     }
 
+    override fun onStop() {
+        super.onStop()
+        socket.off("userList")
+    }
 
+    override fun onRestart() {
+        super.onRestart()
+        attendeesAdapter.notifyDataSetChanged()
+        tv_attendeesNum.text = attendeesDatas.size.toString()
+    }
     override fun onResume() {
         super.onResume()
-        Log.d("socket","CreateRoomActivity에서 소켓 gameState, userList를 다시 켬.")
-        socket.off("userList")
+        Log.d("socket","CreateRoomActivity에서 gameState 다시 켬.")
         socket.off("gameState")
-        socket.on("userList",onUserReceived)
         socket.on("gameState",onGameStateReceived)
     }
     private fun socketOn(){
