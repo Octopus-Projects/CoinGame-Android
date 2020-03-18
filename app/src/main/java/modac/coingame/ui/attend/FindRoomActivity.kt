@@ -57,10 +57,12 @@ class FindRoomActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
         }
     }
     private fun setScannerProperties(){
-        qrCodeScanner.setFormats(listOf(BarcodeFormat.QR_CODE))
-        qrCodeScanner.setAutoFocus(true)
-        qrCodeScanner.setLaserColor(R.color.colorAccent)
-        qrCodeScanner.setMaskColor(R.color.colorAccent)
+        qrCodeScanner.apply {
+            setFormats(listOf(BarcodeFormat.QR_CODE))
+            setAutoFocus(true)
+            setLaserColor(R.color.colorAccent)
+            setMaskColor(R.color.colorAccent)
+        }
         if (Build.MANUFACTURER.equals(HUAWEI, ignoreCase = true))
             qrCodeScanner.setAspectTolerance(0.5f)
     }

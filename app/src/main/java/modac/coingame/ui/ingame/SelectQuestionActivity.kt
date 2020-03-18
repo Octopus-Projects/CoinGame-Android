@@ -70,6 +70,7 @@ class SelectQuestionActivity : AppCompatActivity() {
             RandomQuestionDialog(this,intent.getStringExtra("question")).show(supportFragmentManager,"tag")
         }
     }
+
     private val onQuestionOKReceived = Emitter.Listener {
         val r = Runnable {
             runOnUiThread {
@@ -84,15 +85,8 @@ class SelectQuestionActivity : AppCompatActivity() {
         Log.d("socket","SelectQuestionActivity에서 GameState 받았습니다")
         val receiveMessage = it[0] as JSONObject
         val r = Runnable {
-            var myData : Attendees? = null
             val gameStateData = Gson().fromJson(receiveMessage.toString(), GameStateData::class.java)
-            for (i in 0 until gameStateData.userList.size){
-                val attendees = gameStateData.userList[i]
-                if(attendees.userNickname.equals(App.prefs.user_nick)){
-                    myData = attendees
-                    break
-                }
-            }
+            val myData : Attendees? = gameStateData.userList.find { it.userNickname.equals(App.prefs.user_nick) }
             runOnUiThread{
                 if(myData!=null){
                     App.prefs.king = myData.king

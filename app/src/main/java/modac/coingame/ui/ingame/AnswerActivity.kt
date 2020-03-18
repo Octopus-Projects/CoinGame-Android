@@ -42,10 +42,12 @@ class AnswerActivity : AppCompatActivity() {
     }
     private fun setSocket(){
         Log.d("socket","gameState켰습니다.")
-        socket.on("gameState",onGameStateReceived)
-        socket.on("questionOK",onQuestionOKReceived)
-        socket.on("voteOK",onVoteOKReceived)
-        socket.on("voteNum",onVoteExtraNum)
+        socket.apply {
+            on("gameState",onGameStateReceived)
+            on("questionOK",onQuestionOKReceived)
+            on("voteOK",onVoteOKReceived)
+            on("voteNum",onVoteExtraNum)
+        }
     }
 
     override fun onResume() {
@@ -58,10 +60,12 @@ class AnswerActivity : AppCompatActivity() {
         offSocket()
     }
     private fun offSocket(){
-        socket.off("gameState")
-        socket.off("questionOK")
-        socket.off("voteOK")
-        socket.off("voteNum")
+        socket.apply {
+            off("gameState")
+            off("questionOK")
+            off("voteOK")
+            off("voteNum")
+        }
     }
     private fun checkIntent(){
         val intent = intent
@@ -106,15 +110,8 @@ class AnswerActivity : AppCompatActivity() {
     private val onGameStateReceived = Emitter.Listener {
         val receiveMessage = it[0] as JSONObject
         val r = Runnable {
-            var myData : Attendees? = null
             val gameStateData = Gson().fromJson(receiveMessage.toString(), GameStateData::class.java)
-            for (i in 0 until gameStateData.userList.size){
-                val attendees = gameStateData.userList[i]
-                if(attendees.userNickname.equals(App.prefs.user_nick)){
-                    myData = attendees
-                    break
-                }
-            }
+            val myData : Attendees? = gameStateData.userList.find { it.userNickname.equals(App.prefs.user_nick) }
             runOnUiThread{
                 if(myData!=null){
                     App.prefs.king = myData.king

@@ -120,7 +120,7 @@ class CreateRoomActivity : AppCompatActivity() {
             }
             runOnUiThread{
                 attendeesAdapter.notifyDataSetChanged()
-                tv_attendeesNum.text = attendeesDatas.size.toString()
+                tv_attendeesNum.text = attendeesDatas.count().toString()
             }
         }
         val thread = Thread(r)
@@ -129,15 +129,8 @@ class CreateRoomActivity : AppCompatActivity() {
     private val onGameStateReceived = Emitter.Listener {
         val receiveMessage = it[0] as JSONObject
         val r = Runnable {
-            var myData : Attendees? = null
             val gameStateData = Gson().fromJson(receiveMessage.toString(), GameStateData::class.java)
-            for (i in 0 until gameStateData.userList.size){
-                val attendees = gameStateData.userList[i]
-                if(attendees.userNickname.equals(App.prefs.user_nick)){
-                    myData = attendees
-                    break
-                }
-            }
+            val myData : Attendees? = gameStateData.userList.find { it.userNickname.equals(App.prefs.user_nick) }
             socket.off("userList")
             socket.off("gameState")
             runOnUiThread{
@@ -182,12 +175,6 @@ class CreateRoomActivity : AppCompatActivity() {
         socket.emit("leaveRoom", App.prefs.room_data)
         Log.d("socket","leaveRoom 쏨")
     }
-//    override fun onRestart() {
-//        super.onRestart()
-//        settingSocket()
-//        socket.emit("joinRoom",App.prefs.room_data, App.prefs.user_nick)
-//        Log.d("socket","Restart 되었습니다")
-//    }
     private fun createQRCode(){//QRCode 데이터 생성.
         val randomNum : Long = (Math.random()*99999999).toLong()+1
         val randomRoomData = randomNum.toString()
