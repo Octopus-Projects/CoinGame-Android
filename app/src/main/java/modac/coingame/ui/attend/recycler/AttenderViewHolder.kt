@@ -22,7 +22,7 @@ class AttenderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         else {
             img_king.visibility = View.GONE
         }
-        if(attendees.king&&App.prefs.user_nick.equals(attendees.userNickname)){
+        if(attendees.king&&App.prefs.user_id.equals(attendees.userID)){
             tv_gameStart.visibility = View.VISIBLE
             v_gameStart.visibility = View.VISIBLE
         }

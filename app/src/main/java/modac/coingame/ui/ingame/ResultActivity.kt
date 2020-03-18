@@ -68,15 +68,8 @@ class ResultActivity : AppCompatActivity() {
         val receiveMessage = it[0] as JSONObject
         val r = Runnable {
             Log.d("socket","ResultActivity에서 GameState를 받아왔습니다")
-            var myData : Attendees? = null
             val gameStateData = Gson().fromJson(receiveMessage.toString(), GameStateData::class.java)
-            for (i in 0 until gameStateData.userList.size){
-                val attendees = gameStateData.userList[i]
-                if(attendees.userNickname.equals(App.prefs.user_nick)){
-                    myData = attendees
-                    break
-                }
-            }
+            val myData : Attendees? = gameStateData.userList.find { it.userID.equals(App.prefs.user_id) }
             runOnUiThread{
                 if(myData!=null){
                     App.prefs.king = myData.king

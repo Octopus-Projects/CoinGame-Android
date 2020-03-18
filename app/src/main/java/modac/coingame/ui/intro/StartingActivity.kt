@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.google.android.gms.ads.AdRequest
+import com.google.gson.Gson
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
 import kotlinx.android.synthetic.main.activity_starting.*
@@ -15,6 +16,7 @@ import modac.coingame.network.SocketApplication
 import modac.coingame.ui.attend.CreateRoomActivity
 import modac.coingame.ui.attend.FindRoomActivity
 import modac.coingame.ui.dialog.InfoDialog
+import org.json.JSONObject
 
 class StartingActivity : AppCompatActivity() {
 
@@ -27,11 +29,19 @@ class StartingActivity : AppCompatActivity() {
         settingSocket()
         init()
     }
+
+
+
     private fun settingSocket(){
         socket = SocketApplication.get()
         socket.on(Socket.EVENT_CONNECT,onConnected)
         socket.on(Socket.EVENT_DISCONNECT,onDisconnected)
+        socket.on("start",onStarted)
         socket.connect()
+    }
+
+    private val onStarted = Emitter.Listener {
+        App.prefs.user_id = it[0].toString()
     }
     private val onDisconnected = Emitter.Listener {
         val r = Runnable {

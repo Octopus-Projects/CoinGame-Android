@@ -56,6 +56,7 @@ class CreateRoomActivity : AppCompatActivity() {
 
     override fun onRestart() {
         super.onRestart()
+        socket.on("userList",onUserReceived)
         attendeesAdapter.notifyDataSetChanged()
         tv_attendeesNum.text = attendeesDatas.size.toString()
     }
@@ -93,8 +94,7 @@ class CreateRoomActivity : AppCompatActivity() {
         val userObject = Gson().fromJson(decryptedString, UserObject::class.java)
         App.prefs.room_data = userObject.room_url//방 데이터.
         val roomData = userObject.room_url
-        val userNick = App.prefs.user_nick
-        socket.emit("joinRoom",roomData, userNick)
+        socket.emit("joinRoom",roomData, App.prefs.user_nick)
         Log.d("socket","소켓 emit 요청 완료~~~~~~~~~~~ 방 이름 : ${userObject.room_url}")
         setQRCodeData()
     }
@@ -130,7 +130,7 @@ class CreateRoomActivity : AppCompatActivity() {
         val receiveMessage = it[0] as JSONObject
         val r = Runnable {
             val gameStateData = Gson().fromJson(receiveMessage.toString(), GameStateData::class.java)
-            val myData : Attendees? = gameStateData.userList.find { it.userNickname.equals(App.prefs.user_nick) }
+            val myData : Attendees? = gameStateData.userList.find { it.userID.equals(App.prefs.user_id) }
             socket.off("userList")
             socket.off("gameState")
             runOnUiThread{

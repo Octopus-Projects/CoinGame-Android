@@ -111,7 +111,7 @@ class AnswerActivity : AppCompatActivity() {
         val receiveMessage = it[0] as JSONObject
         val r = Runnable {
             val gameStateData = Gson().fromJson(receiveMessage.toString(), GameStateData::class.java)
-            val myData : Attendees? = gameStateData.userList.find { it.userNickname.equals(App.prefs.user_nick) }
+            val myData : Attendees? = gameStateData.userList.find { it.userID.equals(App.prefs.user_id) }
             runOnUiThread{
                 if(myData!=null){
                     App.prefs.king = myData.king
