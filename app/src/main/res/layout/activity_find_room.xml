@@ -53,7 +53,7 @@
     </LinearLayout>
     <com.google.android.gms.ads.AdView
         ads:adSize="BANNER"
-        ads:adUnitId="@string/app_banner_test_id"
+        ads:adUnitId="@string/app_banner_ad_id"
         xmlns:ads="http://schemas.android.com/apk/res-auto"
         android:id="@+id/adView"
         android:layout_marginBottom="16dp"

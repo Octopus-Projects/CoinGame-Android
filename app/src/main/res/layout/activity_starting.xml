@@ -64,7 +64,7 @@
         xmlns:ads="http://schemas.android.com/apk/res-auto"
         android:layout_marginBottom="16dp"
         ads:adSize="BANNER"
-        ads:adUnitId="@string/app_banner_test_id"
+        ads:adUnitId="@string/app_banner_ad_id"
         android:layout_alignParentBottom="true"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="match_parent"
