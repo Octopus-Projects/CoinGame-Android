@@ -3,9 +3,7 @@ package modac.coingame.ui.intro
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat
 import com.google.android.gms.ads.MobileAds
@@ -22,11 +20,10 @@ class IntroActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_intro)
-        MobileAds.initialize(this, object : OnInitializationCompleteListener {
-            override fun onInitializationComplete(initializationStatus: InitializationStatus?) {}
-        })
+        MobileAds.initialize(this
+        ) { }
         val r = Runnable {
-            val drawable = ApngDrawable.decode(this.resources,R.drawable.splash)
+            val drawable = ApngDrawable.decode(this.resources,R.raw.splash)
             drawable.registerAnimationCallback(animationCallback)
             runOnUiThread{
                 img_splash.setImageDrawable(drawable)

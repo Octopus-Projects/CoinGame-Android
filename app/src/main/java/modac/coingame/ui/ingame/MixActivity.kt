@@ -48,7 +48,7 @@ class MixActivity : AppCompatActivity() {
                 cl_mix1Layout.visibility = View.GONE
                 img_mix2.visibility = View.VISIBLE
                 val r = Runnable {
-                    val drawable = ApngDrawable.decode(resources,R.drawable.shake_coin)
+                    val drawable = ApngDrawable.decode(resources,R.raw.shake_coin)
                     drawable.registerAnimationCallback(animationCallback)
                     runOnUiThread{
                         img_mix2.setImageDrawable(drawable)
