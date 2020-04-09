@@ -107,8 +107,9 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:paddingTop="16dp"
                     android:paddingBottom="16dp"
-                    android:clipToPadding="false"
+                    android:layout_marginVertical="4dp"
                     android:id="@+id/rv_attendees"
+                    android:clipToPadding="false"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </FrameLayout>
